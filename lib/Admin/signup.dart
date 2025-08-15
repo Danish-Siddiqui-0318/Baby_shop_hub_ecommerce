@@ -1,7 +1,10 @@
 import 'package:baby_shop_hub/Admin/login.dart';
+import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../services/auth_service.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -15,10 +18,12 @@ class _SignupState extends State<Signup> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +79,13 @@ class _SignupState extends State<Signup> {
                   ),
                 ),
                 validator: (input) {
-                      if (input!.isEmpty) {
-                        return "Email is required";
-                      } else if (!input.contains('@') || !input.contains('.com')) {
-                        return "Enter valid email";
-                      }
-                      return null;
-                    },
+                  if (input!.isEmpty) {
+                    return "Email is required";
+                  } else if (!input.contains('@') || !input.contains('.com')) {
+                    return "Enter valid email";
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 15.h),
 
@@ -109,13 +114,13 @@ class _SignupState extends State<Signup> {
                   ),
                 ),
                 validator: (input) {
-                      if (input!.isEmpty) {
-                        return "Password is required";
-                      } else if (input.length < 8) {
-                        return "Password should be at least 8 characters";
-                      }
-                      return null;
-                    },
+                  if (input!.isEmpty) {
+                    return "Password is required";
+                  } else if (input.length < 8) {
+                    return "Password should be at least 8 characters";
+                  }
+                  return null;
+                },
               ),
 
               SizedBox(height: 20.h),
@@ -161,10 +166,26 @@ class _SignupState extends State<Signup> {
                 width: double.infinity,
                 height: 50.h,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Process signup
+                      showLoading(context);
+                      await _authService
+                          .createAccount(
+                            _nameController.text,
+                            _emailController.text,
+                            _passwordController.text,
+                          )
+                          .then((value) {
+                            Navigator.pop(context);
+                            showMessage("Account Created", context);
+                            gotoPage(Login(), context);
+                          })
+                          .catchError((error) {
+                            Navigator.pop(context);
+                            showMessage(error, context, isError: true);
+                          });
                     }
+                    ;
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFFF3B5F),
@@ -218,7 +239,7 @@ class _SignupState extends State<Signup> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const Login()),
                       );

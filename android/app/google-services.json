@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "121758559763",
+    "project_id": "fir-project-1-a1f1e",
+    "storage_bucket": "fir-project-1-a1f1e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121758559763:android:54ad5ec4a40318aaaa99e6",
+        "android_client_info": {
+          "package_name": "com.example.baby_shop_hub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjCpi8xvrAvdt8q7AYPkkidZvKULGjYcU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

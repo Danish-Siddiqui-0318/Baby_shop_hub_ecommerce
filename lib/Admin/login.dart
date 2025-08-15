@@ -1,7 +1,9 @@
-
-
+import 'package:baby_shop_hub/Admin/Admin.dart';
 import 'package:baby_shop_hub/Admin/forgotPassword.dart';
 import 'package:baby_shop_hub/Admin/signup.dart';
+import 'package:baby_shop_hub/Home.dart';
+import 'package:baby_shop_hub/services/auth_service.dart';
+import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,6 +16,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -53,18 +56,17 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 validator: (input) {
-                      if (input!.isEmpty) {
-                        return "Email is required";
-                      } else if (!input.contains('@') || !input.contains('.com')) {
-                        return "Enter valid email";
-                      }
-                      return null;
-                    },
+                  if (input!.isEmpty) {
+                    return "Email is required";
+                  } else if (!input.contains('@') || !input.contains('.com')) {
+                    return "Enter valid email";
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 15.h),
 
               // Password Field
-              
               TextFormField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
@@ -89,13 +91,13 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 validator: (input) {
-                      if (input!.isEmpty) {
-                        return "Password is required";
-                      } else if (input.length < 8) {
-                        return "Password should be at least 8 characters";
-                      }
-                      return null;
-                    },
+                  if (input!.isEmpty) {
+                    return "Password is required";
+                  } else if (input.length < 8) {
+                    return "Password should be at least 8 characters";
+                  }
+                  return null;
+                },
               ),
 
               // Forgot Password
@@ -105,15 +107,14 @@ class _LoginState extends State<Login> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ForgotPassword()),
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPassword(),
+                      ),
                     );
                   },
                   child: Text(
                     "Forgot Password?",
-                    style: TextStyle(
-                      color: Color(0xFFFF3B5F),
-                      fontSize: 14.sp,
-                    ),
+                    style: TextStyle(color: Color(0xFFFF3B5F), fontSize: 14.sp),
                   ),
                 ),
               ),
@@ -125,9 +126,31 @@ class _LoginState extends State<Login> {
                 width: double.infinity,
                 height: 50.h,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Process login here
+                      showLoading(context);
+                      if (_emailController.text == "admin@firebase.com" &&
+                          _passwordController.text == "admin@firebase") {
+                        gotoAndRemoveAll(Admin(), context);
+                        showMessage("Welcome To Admin Panel", context,desc: "Welcome Admin");
+                      } else {
+                        await _auth
+                            .login(
+                              _emailController.text,
+                              _passwordController.text,
+                            )
+                            .then((value) {
+                              showMessage(
+                                "Logged in",
+                                context,
+                                desc: "Welcome to Our Website",
+                              );
+                              gotoAndRemoveAll(HomePage(), context);
+                            })
+                            .catchError((error) {
+                              showMessage(error, context, isError: true);
+                            });
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -181,8 +204,8 @@ class _LoginState extends State<Login> {
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                           MaterialPageRoute(builder: (context) => const Signup()),
-                        );
+                        MaterialPageRoute(builder: (context) => const Signup()),
+                      );
                     },
                     child: Text(
                       "Sign Up",
