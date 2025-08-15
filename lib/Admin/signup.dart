@@ -73,17 +73,14 @@ class _SignupState extends State<Signup> {
                     borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(
-                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                  ).hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
+                validator: (input) {
+                      if (input!.isEmpty) {
+                        return "Email is required";
+                      } else if (!input.contains('@') || !input.contains('.com')) {
+                        return "Enter valid email";
+                      }
+                      return null;
+                    },
               ),
               SizedBox(height: 15.h),
 
@@ -111,15 +108,14 @@ class _SignupState extends State<Signup> {
                     borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
-                  return null;
-                },
+                validator: (input) {
+                      if (input!.isEmpty) {
+                        return "Password is required";
+                      } else if (input.length < 8) {
+                        return "Password should be at least 8 characters";
+                      }
+                      return null;
+                    },
               ),
 
               SizedBox(height: 20.h),
