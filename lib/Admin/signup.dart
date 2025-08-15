@@ -1,3 +1,4 @@
+import 'package:baby_shop_hub/Admin/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -74,8 +75,9 @@ class _SignupState extends State<Signup> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                      .hasMatch(value)) {
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
                   return null;
@@ -176,11 +178,16 @@ class _SignupState extends State<Signup> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Already have an account? ",
-                      style: TextStyle(fontSize: 14.sp)),
+                  Text(
+                    "Already have an account? ",
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
                     },
                     child: Text(
                       "Login",
