@@ -1,5 +1,6 @@
 
 
+import 'package:baby_shop_hub/Admin/forgotPassword.dart';
 import 'package:baby_shop_hub/Admin/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -101,7 +102,12 @@ class _LoginState extends State<Login> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ForgotPassword()),
+                    );
+                  },
                   child: Text(
                     "Forgot Password?",
                     style: TextStyle(
