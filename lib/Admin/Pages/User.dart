@@ -15,7 +15,7 @@ class User extends StatelessWidget {
           child: ListTile(
             leading: CircleAvatar(
               backgroundImage: NetworkImage(
-                "https://randomuser.me/api/portraits/men/75.jpg", // sample profile
+                "https://randomuser.me/api/portraits/men/75.jpg", // sample product image
               ),
               radius: 25,
             ),

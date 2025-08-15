@@ -1,4 +1,4 @@
-import 'package:baby_shop_hub/Admin/Admin.dart';
+import 'package:baby_shop_hub/Admin/Pages/Admin.dart';
 import 'package:baby_shop_hub/Admin/forgotPassword.dart';
 import 'package:baby_shop_hub/Admin/signup.dart';
 import 'package:baby_shop_hub/Home.dart';
