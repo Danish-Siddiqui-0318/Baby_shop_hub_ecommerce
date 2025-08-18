@@ -19,6 +19,9 @@ class _AddProductsState extends State<AddProducts> {
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
 
+  String? _selectedCategory; // for dropdown
+  final List<String> _categories = ["Electronics", "Clothing", "Toys"];
+
   Future<void> _pickImageFromGallery() async {
     final pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
@@ -49,7 +52,7 @@ class _AddProductsState extends State<AddProducts> {
             children: [
               SizedBox(height: 10.h),
               Text(
-                "Add\nProduct",
+                "Add Product",
                 style: TextStyle(
                   fontSize: 32.sp,
                   fontWeight: FontWeight.bold,
@@ -104,6 +107,33 @@ class _AddProductsState extends State<AddProducts> {
                           ),
                         ),
                 ),
+              ),
+              SizedBox(height: 15.h),
+
+              // Category Dropdown
+              DropdownButtonFormField<String>(
+                value: _selectedCategory,
+                decoration: InputDecoration(
+                  hintText: "Select Category",
+                  prefixIcon: const Icon(Icons.category_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                ),
+                items: _categories.map((category) {
+                  return DropdownMenuItem<String>(
+                    value: category,
+                    child: Text(category),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value;
+                  });
+                },
+                validator: (value) =>
+                    value == null ? 'Please select a category' : null,
               ),
               SizedBox(height: 15.h),
 
@@ -164,8 +194,10 @@ class _AddProductsState extends State<AddProducts> {
                     }
                     if (_formKey.currentState!.validate()) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Product Added Successfully")),
+                        SnackBar(
+                          content: Text(
+                              "Product Added Successfully in $_selectedCategory"),
+                        ),
                       );
                     }
                   },
