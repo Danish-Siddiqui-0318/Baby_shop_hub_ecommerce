@@ -73,4 +73,16 @@ class AuthService {
       throw e.message ?? "Something went wrong";
     }
   }
+
+  // get All Users
+
+  Stream<List<Map<String, dynamic>>> getAllUsers() {
+    return _db.collection('users').snapshots().asyncMap((snapshot) {
+      List<Map<String, dynamic>> usersList = [];
+      for (var doc in snapshot.docs) {
+        usersList.add(doc.data());
+      }
+      return usersList;
+    });
+  }
 }

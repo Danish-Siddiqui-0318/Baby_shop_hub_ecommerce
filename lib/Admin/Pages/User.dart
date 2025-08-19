@@ -1,49 +1,66 @@
+import 'package:baby_shop_hub/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
-class User extends StatelessWidget {
-  const User({super.key});
+import '../../utils/helper.dart';
+import 'Admin.dart';
+
+class AllUsers extends StatelessWidget {
+  AllUsers({super.key});
+
+  AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("User Page")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          elevation: 3,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(
-                "https://randomuser.me/api/portraits/men/75.jpg", // sample product image
-              ),
-              radius: 25,
-            ),
-            title: const Text("John Doe"),
-            subtitle: const Text("johndoe@example.com"),
-            trailing: PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'delete') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("User deleted")),
-                  );
-                }
-              },
-              itemBuilder: (BuildContext context) => [
-                const PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.red),
-                      SizedBox(width: 8),
-                      Text("Delete"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+      appBar: AppBar(
+        title: const Text("User Page"),
+        backgroundColor: Colors.redAccent,
+        foregroundColor: Colors.white,
+        leading: GestureDetector(
+          onTap: () {
+            gotoPage(Admin(), context);
+          },
+          child: Icon(Icons.arrow_back_ios),
         ),
+      ),
+      body: StreamBuilder(
+        stream: _authService.getAllUsers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error.toString()));
+          } else if (snapshot.data!.isEmpty) {
+            return Center(child: Text("No Product Here"));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                var data = snapshot.data![index];
+                return Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListTile(
+                      // leading: CircleAvatar(
+                      //   backgroundImage: NetworkImage(
+                      //     "https://randomuser.me/api/portraits/men/75.jpg", // sample product image
+                      //   ),
+                      //   radius: 25,
+                      // ),
+                      title:  Text(data['name']),
+                      subtitle:  Text(data['email']),
+                      trailing: Icon(Icons.delete, color: Colors.red),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }

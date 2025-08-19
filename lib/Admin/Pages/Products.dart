@@ -1,64 +1,76 @@
 import 'package:baby_shop_hub/Admin/Pages/AddProducts.dart';
+import 'package:baby_shop_hub/Admin/Pages/Admin.dart';
+import 'package:baby_shop_hub/services/product_service.dart';
+import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
 
 class Products extends StatelessWidget {
-  const Products({super.key});
+  Products({super.key});
+
+  ProductService _productService = ProductService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Products Page")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          elevation: 3,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          child: ListTile(
-            leading: const CircleAvatar(
-              backgroundImage: NetworkImage(
-                "https://randomuser.me/api/portraits/men/75.jpg",
-              ),
-              radius: 25,
-            ),
-            title: const Text("Sample Product"),
-            subtitle: const Text("\$49.99"),
-            trailing: PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'edit') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Edit product clicked")),
-                  );
-                } else if (value == 'delete') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Product deleted")),
-                  );
-                }
-              },
-              itemBuilder: (BuildContext context) => [
-                const PopupMenuItem(
-                  value: 'edit',
-                  child: Row(
-                    children: [
-                      Icon(Icons.edit, color: Colors.blue),
-                      SizedBox(width: 8),
-                      Text("Edit"),
-                    ],
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.red),
-                      SizedBox(width: 8),
-                      Text("Delete"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.redAccent,
+        foregroundColor: Colors.white,
+        title: const Text("Products Page"),
+        leading: GestureDetector(
+          onTap: () {
+            gotoPage(Admin(), context);
+          },
+          child: Icon(Icons.arrow_back_ios),
         ),
+      ),
+      body: StreamBuilder(
+        stream: _productService.getProducts(),
+        builder: (context, snpashot) {
+          if (snpashot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snpashot.hasError) {
+            return Center(child: Text(snpashot.error.toString()));
+          } else if (snpashot.data!.isEmpty) {
+            return Center(child: Text("No Product Here"));
+          } else {
+            return ListView.builder(
+              itemCount: snpashot.data!.length,
+              itemBuilder: (context, index) {
+                var data = snpashot.data![index];
+                return Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(data['imageUrl']),
+                        radius: 25,
+                      ),
+                      title: Text(data['title']),
+                      subtitle: Text("\$${data['price']}"),
+                      trailing: GestureDetector(
+                        onTap: () {
+                          _productService
+                              .deleteProduct(data['id'])
+                              .then((value) {
+                                showMessage("Product Deleted", context);
+                              })
+                              .catchError((error) {
+                                showMessage(error, context, isError: true);
+                              });
+                        },
+                        child: Icon(Icons.delete, color: Colors.red),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,

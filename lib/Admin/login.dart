@@ -132,7 +132,7 @@ class _LoginState extends State<Login> {
                       if (_emailController.text == "admin@firebase.com" &&
                           _passwordController.text == "admin@firebase") {
                         gotoAndRemoveAll(Admin(), context);
-                        showMessage("Welcome To Admin Panel", context,desc: "Welcome Admin");
+                        showMessage("Welcome To Admin Panel", context);
                       } else {
                         await _auth
                             .login(
@@ -140,11 +140,7 @@ class _LoginState extends State<Login> {
                               _passwordController.text,
                             )
                             .then((value) {
-                              showMessage(
-                                "Logged in",
-                                context,
-                                desc: "Welcome to Our Website",
-                              );
+                              showMessage("Logged in", context);
                               gotoAndRemoveAll(HomePage(), context);
                             })
                             .catchError((error) {

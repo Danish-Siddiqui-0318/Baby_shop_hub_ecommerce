@@ -25,7 +25,6 @@ showMessage(
   String message,
   BuildContext context, {
   bool isError = false,
-  String desc = '',
 }) {
   toastification.show(
     context: context,
@@ -36,7 +35,6 @@ showMessage(
     title: Text(message),
     alignment: Alignment.topRight,
     direction: TextDirection.ltr,
-    description: Text(desc),
     // animationDuration: const Duration(milliseconds: 300),
     // animationBuilder: (context, animation, alignment, child) {
     //   return FadeTransition(turns: animation, child: child);

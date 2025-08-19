@@ -1,7 +1,13 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:baby_shop_hub/Admin/Pages/Admin.dart';
+import 'package:baby_shop_hub/Admin/Pages/Products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../services/product_service.dart';
+import '../../utils/helper.dart';
 
 class AddProducts extends StatefulWidget {
   const AddProducts({super.key});
@@ -11,27 +17,37 @@ class AddProducts extends StatefulWidget {
 }
 
 class _AddProductsState extends State<AddProducts> {
+  Uint8List? image;
+  String? imageName;
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-
-  File? _selectedImage;
-  final ImagePicker _picker = ImagePicker();
+  final TextEditingController priceController = TextEditingController();
+  ImagePicker picker = ImagePicker();
+  ProductService productService = ProductService();
 
   String? _selectedCategory; // for dropdown
-  final List<String> _categories = ["Electronics", "Clothing", "Toys"];
+  final List<String> _categories = [
+    "Electronics",
+    "Clothing",
+    "Toys",
+    "Accessories",
+    "Feeding & Nursing",
+    "Diapers & Wipes",
+    "Strollers & Travel",
+    "Cribs & Bedding",
+    "Health & Safety",
+    "Bath & Skincare",
+    "Shoes",
+    "Gifts & Sets",
+  ];
 
-  Future<void> _pickImageFromGallery() async {
-    final pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 800,
-    );
-
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
+  Future<void> pickImage() async {
+    var pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      image = await pickedImage.readAsBytes();
+      imageName = pickedImage.name;
+      setState(() {});
     }
   }
 
@@ -63,7 +79,7 @@ class _AddProductsState extends State<AddProducts> {
 
               // Product Name
               TextFormField(
-                controller: _nameController,
+                controller: titleController,
                 decoration: InputDecoration(
                   hintText: "Product Name",
                   prefixIcon: const Icon(Icons.label_outline),
@@ -72,8 +88,9 @@ class _AddProductsState extends State<AddProducts> {
                     borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Enter product name' : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Enter product name'
+                    : null,
               ),
               SizedBox(height: 15.h),
 
@@ -84,7 +101,9 @@ class _AddProductsState extends State<AddProducts> {
               ),
               SizedBox(height: 10.h),
               GestureDetector(
-                onTap: _pickImageFromGallery,
+                onTap: () {
+                  pickImage();
+                },
                 child: Container(
                   height: 150.h,
                   width: double.infinity,
@@ -93,15 +112,18 @@ class _AddProductsState extends State<AddProducts> {
                     borderRadius: BorderRadius.circular(8.r),
                     color: Colors.grey.shade100,
                   ),
-                  child: _selectedImage == null
+                  child: image == null
                       ? const Center(
-                          child: Icon(Icons.add_photo_alternate,
-                              size: 40, color: Colors.grey),
+                          child: Icon(
+                            Icons.add_photo_alternate,
+                            size: 40,
+                            color: Colors.grey,
+                          ),
                         )
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(8.r),
-                          child: Image.file(
-                            _selectedImage!,
+                          child: Image.memory(
+                            image!,
                             fit: BoxFit.cover,
                             width: double.infinity,
                           ),
@@ -157,7 +179,7 @@ class _AddProductsState extends State<AddProducts> {
 
               // Price
               TextFormField(
-                controller: _priceController,
+                controller: priceController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: "Price",
@@ -185,20 +207,38 @@ class _AddProductsState extends State<AddProducts> {
                 height: 50.h,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_selectedImage == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Please select a product image")),
+                    if (image == null ||
+                        titleController.text.isEmpty ||
+                        _descriptionController.text.isEmpty ||
+                        priceController.text.isEmpty ||
+                        _selectedCategory == null) {
+                      showMessage(
+                        "All fields are required",
+                        context,
+                        isError: true,
                       );
-                      return;
-                    }
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              "Product Added Successfully in $_selectedCategory"),
-                        ),
-                      );
+                    } else {
+                      productService
+                          .addProduct(
+                            image!,
+                            imageName!,
+                            titleController.text,
+                            double.parse(priceController.text),
+                            _selectedCategory!,
+                            _descriptionController.text,
+                          )
+                          .then((value) {
+                            // Show success message
+                            showMessage("Product Uploaded", context);
+                            gotoPage(Products(), context);
+                          })
+                          .catchError((error) {
+                            showMessage(
+                              error.toString(),
+                              context,
+                              isError: true,
+                            );
+                          });
                     }
                   },
                   style: ElevatedButton.styleFrom(

@@ -1,5 +1,7 @@
 import 'package:baby_shop_hub/Admin/Pages/Products.dart';
 import 'package:baby_shop_hub/Admin/Pages/User.dart';
+import 'package:baby_shop_hub/services/auth_service.dart';
+import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
 
 class Admin extends StatefulWidget {
@@ -14,19 +16,22 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
 
+  AuthService _authService = AuthService();
+
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
-
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, -0.5), end: Offset.zero).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
     );
 
-    _fadeAnimation =
-        Tween<double>(begin: 0, end: 1).animate(_controller);
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -0.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
     _controller.forward();
   }
@@ -40,7 +45,11 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Admin Page")),
+      appBar: AppBar(
+        title: const Text("Admin Page"),
+        backgroundColor: Colors.redAccent,
+        foregroundColor: Colors.white,
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -58,7 +67,7 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Products()),
+                  MaterialPageRoute(builder: (context) => Products()),
                 );
               },
             ),
@@ -68,14 +77,23 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const User()),
+                  MaterialPageRoute(builder: (context) => AllUsers()),
                 );
               },
             ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text("Logout"),
-              onTap: () {},
+              onTap: () {
+                _authService
+                    .logout()
+                    .then((value) {
+                      showMessage("Logout Successfully", context);
+                    })
+                    .catchError((error) {
+                      showMessage(error, context);
+                    });
+              },
             ),
           ],
         ),
