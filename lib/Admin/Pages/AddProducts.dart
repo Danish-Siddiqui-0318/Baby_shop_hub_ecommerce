@@ -218,6 +218,7 @@ class _AddProductsState extends State<AddProducts> {
                         isError: true,
                       );
                     } else {
+                      showLoading(context);
                       productService
                           .addProduct(
                             image!,
@@ -228,11 +229,13 @@ class _AddProductsState extends State<AddProducts> {
                             _descriptionController.text,
                           )
                           .then((value) {
+                            Navigator.pop(context);
                             // Show success message
                             showMessage("Product Uploaded", context);
                             gotoPage(Products(), context);
                           })
                           .catchError((error) {
+                            Navigator.pop(context);
                             showMessage(
                               error.toString(),
                               context,

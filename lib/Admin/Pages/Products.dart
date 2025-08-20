@@ -50,22 +50,34 @@ class Products extends StatelessWidget {
                         radius: 25,
                       ),
                       title: Text(data['title']),
-                      subtitle: Text("\$${data['price']}"),
-                      trailing: GestureDetector(
-                        onTap: () async {
-                          showLoading(context);
-                          await _productService
-                              .deleteProduct(data['id'])
-                              .then((value) {
-                                Navigator.pop(context);
-                                showMessage("Product Deleted", context);
-                              })
-                              .catchError((error) {
-                                Navigator.pop(context);
-                                showMessage(error, context, isError: true);
-                              });
-                        },
-                        child: Icon(Icons.delete, color: Colors.red),
+                      isThreeLine: true,
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Category: ${data['category']}"),
+                          Text("Price:  \$${data['price']}"),
+                        ],
+                      ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              showLoading(context);
+                              await _productService
+                                  .deleteProduct(data['id'])
+                                  .then((value) {
+                                    Navigator.pop(context);
+                                    showMessage("Product Deleted", context);
+                                  })
+                                  .catchError((error) {
+                                    Navigator.pop(context);
+                                    showMessage(error, context, isError: true);
+                                  });
+                            },
+                            child: Icon(Icons.delete, color: Colors.red),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
+import '../utils/exception_handler.dart';
+
 class ProductService {
   SupabaseClient supabase = Supabase.instance.client;
 
@@ -46,8 +48,8 @@ class ProductService {
         'category': category,
         'desc': desc,
       });
-    } catch (e) {
-      throw e.toString();
+    } on FirebaseException catch (e) {
+      throw getMessageFromErrorCode(e.code);
     }
   }
 
