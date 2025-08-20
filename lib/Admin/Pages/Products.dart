@@ -52,13 +52,16 @@ class Products extends StatelessWidget {
                       title: Text(data['title']),
                       subtitle: Text("\$${data['price']}"),
                       trailing: GestureDetector(
-                        onTap: () {
-                          _productService
+                        onTap: () async {
+                          showLoading(context);
+                          await _productService
                               .deleteProduct(data['id'])
                               .then((value) {
+                                Navigator.pop(context);
                                 showMessage("Product Deleted", context);
                               })
                               .catchError((error) {
+                                Navigator.pop(context);
                                 showMessage(error, context, isError: true);
                               });
                         },

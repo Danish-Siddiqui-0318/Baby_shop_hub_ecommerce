@@ -45,15 +45,33 @@ class AllUsers extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: ListTile(
-                      // leading: CircleAvatar(
-                      //   backgroundImage: NetworkImage(
-                      //     "https://randomuser.me/api/portraits/men/75.jpg", // sample product image
-                      //   ),
-                      //   radius: 25,
-                      // ),
-                      title:  Text(data['name']),
-                      subtitle:  Text(data['email']),
-                      trailing: Icon(Icons.delete, color: Colors.red),
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          // sample product image
+                          data['profile_pic'] ??
+                              "https://randomuser.me/api/portraits/men/75.jpg",
+                        ),
+                        radius: 25,
+                      ),
+                      title: Text(data['name']),
+                      subtitle: Text(data['email']),
+                      trailing: GestureDetector(
+                        onTap: () async {
+                          showLoading(context);
+                          _authService
+                              .deleteUser(data['id'])
+                              .then((value) {
+                                Navigator.pop(context);
+                                showMessage("User Deleted", context);
+                                print("THis function is run");
+                              })
+                              .catchError((error) {
+                                Navigator.pop(context);
+                                showMessage(error, context);
+                              });
+                        },
+                        child: Icon(Icons.delete, color: Colors.red),
+                      ),
                     ),
                   ),
                 );
@@ -65,3 +83,5 @@ class AllUsers extends StatelessWidget {
     );
   }
 }
+
+// "https://randomuser.me/api/portraits/men/75.jpg",

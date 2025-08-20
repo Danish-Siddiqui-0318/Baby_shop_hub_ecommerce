@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../utils/exception_handler.dart';
 
@@ -11,6 +12,9 @@ class AuthService {
   // firebase database
 
   FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  //supabse
+  SupabaseClient supabase = Supabase.instance.client;
 
   // create account
 
@@ -27,6 +31,7 @@ class AuthService {
         'id': userId,
         'name': name,
         'email': email,
+        'profile_pic': null,
       });
 
       // print("Account Created");
@@ -61,6 +66,14 @@ class AuthService {
 
   //forget password
 
+  Future<void> forgetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseException catch (e) {
+      throw getMessageFromErrorCode(e.code);
+    }
+  }
+
   // get user details
   Future<Map<String, dynamic>?> getUsersDetails() async {
     try {
@@ -84,5 +97,42 @@ class AuthService {
       }
       return usersList;
     });
+  }
+
+  // delete a User
+  Future<void> deleteUser(String productId) async {
+    try {
+      // 1. Get product data from Firestore
+      var doc = await _db.collection('users').doc(productId).get();
+
+      if (!doc.exists) {
+        throw Exception("Product not found");
+      }
+
+      var data = doc.data()!;
+      String imageUrl = data['profile_pic'];
+
+      // 2. Extract path from Supabase public URL
+      // Example URL: https://xyz.supabase.co/storage/v1/object/public/products/images/abc.png
+      // Path we need: images/abc.png
+      Uri uri = Uri.parse(imageUrl);
+      String path = uri.pathSegments.sublist(5).join('/');
+      // "storage/v1/object/public/products/" → skip 4 segments
+
+      print("Deleting path: $path");
+
+      if (data['profile_pic'] != null) {
+        // 3. Delete image from Supabase
+        print("Deleting path: $path");
+        await supabase.storage.from('user_profile_pic').remove([path]);
+        print("im here");
+      }else{
+        print("This is Empty");
+      }
+      // 4. Delete Firestore document
+      await _db.collection('users').doc(productId).delete();
+    } on FirebaseException catch (e) {
+      throw getMessageFromErrorCode(e.code);
+    }
   }
 }
