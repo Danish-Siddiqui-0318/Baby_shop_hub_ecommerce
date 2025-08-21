@@ -14,10 +14,7 @@ class AllUsers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "User Page",
-          style: TextStyle(fontSize: 18.sp),
-        ),
+        title: Text("User Page", style: TextStyle(fontSize: 18.sp)),
         backgroundColor: Colors.redAccent,
         foregroundColor: Colors.white,
         leading: GestureDetector(
@@ -31,11 +28,13 @@ class AllUsers extends StatelessWidget {
         stream: _authService.getAllUsers(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: SizedBox(
-              width: 30.w,
-              height: 30.w,
-              child: const CircularProgressIndicator(),
-            ));
+            return Center(
+              child: SizedBox(
+                width: 30.w,
+                height: 30.w,
+                child: const CircularProgressIndicator(),
+              ),
+            );
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
@@ -45,10 +44,7 @@ class AllUsers extends StatelessWidget {
             );
           } else if (snapshot.data!.isEmpty) {
             return Center(
-              child: Text(
-                "No Product Here",
-                style: TextStyle(fontSize: 16.sp),
-              ),
+              child: Text("No Product Here", style: TextStyle(fontSize: 16.sp)),
             );
           } else {
             return ListView.builder(
@@ -81,16 +77,23 @@ class AllUsers extends StatelessWidget {
                       trailing: GestureDetector(
                         onTap: () async {
                           showLoading(context);
-                          _authService.deleteUser(data['id']).then((value) {
-                            Navigator.pop(context);
-                            showMessage("User Deleted", context);
-                            print("This function is run");
-                          }).catchError((error) {
-                            Navigator.pop(context);
-                            showMessage(error, context);
-                          });
+                          _authService
+                              .deleteUser(data['id'])
+                              .then((value) {
+                                Navigator.pop(context);
+                                showMessage("User Deleted", context);
+                                print("This function is run");
+                              })
+                              .catchError((error) {
+                                Navigator.pop(context);
+                                showMessage(error, context);
+                              });
                         },
-                        child: Icon(Icons.delete, color: Colors.red, size: 22.sp),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 22.sp,
+                        ),
                       ),
                     ),
                   ),

@@ -124,7 +124,7 @@ class _AddProductsState extends State<AddProducts> {
                           borderRadius: BorderRadius.circular(8.r),
                           child: Image.memory(
                             image!,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                             width: double.infinity,
                           ),
                         ),

@@ -1,5 +1,6 @@
 import 'package:baby_shop_hub/Admin/Pages/Products.dart';
 import 'package:baby_shop_hub/Admin/Pages/User.dart';
+import 'package:baby_shop_hub/Admin/login.dart';
 import 'package:baby_shop_hub/services/auth_service.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
@@ -47,10 +48,7 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Admin Page",
-          style: TextStyle(fontSize: 18.sp),
-        ),
+        title: Text("Admin Page", style: TextStyle(fontSize: 18.sp)),
         backgroundColor: Colors.redAccent,
         foregroundColor: Colors.white,
       ),
@@ -89,11 +87,18 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
               leading: Icon(Icons.logout, size: 22.sp),
               title: Text("Logout", style: TextStyle(fontSize: 15.sp)),
               onTap: () {
-                _authService.logout().then((value) {
-                  showMessage("Logout Successfully", context);
-                }).catchError((error) {
-                  showMessage(error, context);
-                });
+                showLoading(context);
+                _authService
+                    .logout()
+                    .then((value) {
+                      gotoPage(Login(), context);
+                      showMessage("Logout Successfully", context);
+                      Navigator.pop(context);
+                    })
+                    .catchError((error) {
+                      showMessage(error, context);
+                      Navigator.pop(context);
+                    });
               },
             ),
           ],

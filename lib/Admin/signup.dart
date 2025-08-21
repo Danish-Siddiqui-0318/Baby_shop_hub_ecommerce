@@ -16,6 +16,8 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  // Uint8List? image;
+  // String? imageName;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -34,7 +36,7 @@ class _SignupState extends State<Signup> {
 
   // pick image from gallery
   Future<void> _pickImageFromGallery() async {
-    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    var pickedImage = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       _image = await pickedImage.readAsBytes();
       _imageName = pickedImage.name;
@@ -97,7 +99,7 @@ class _SignupState extends State<Signup> {
             children: [
               SizedBox(height: 30.h),
               Text(
-                "Create\nAccount",
+                "Create Account",
                 style: TextStyle(
                   fontSize: 32.sp,
                   fontWeight: FontWeight.bold,
@@ -115,8 +117,11 @@ class _SignupState extends State<Signup> {
                   backgroundColor: Colors.grey.shade200,
                   backgroundImage: _image != null ? MemoryImage(_image!) : null,
                   child: _image == null
-                      ? Icon(Icons.add_a_photo,
-                          size: 40.sp, color: Colors.grey)
+                      ? Icon(
+                          Icons.people_outline_sharp,
+                          size: 40.sp,
+                          color: Colors.grey,
+                        )
                       : null,
                 ),
               ),
@@ -133,8 +138,9 @@ class _SignupState extends State<Signup> {
                     borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Enter your full name' : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Enter your full name'
+                    : null,
               ),
               SizedBox(height: 15.h),
 
@@ -238,8 +244,11 @@ class _SignupState extends State<Signup> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       if (_image == null) {
-                        showMessage("Please select a profile image", context,
-                            isError: true);
+                        showMessage(
+                          "Please select a profile image",
+                          context,
+                          isError: true,
+                        );
                         return;
                       }
                       showLoading(context);
@@ -248,16 +257,19 @@ class _SignupState extends State<Signup> {
                             _nameController.text,
                             _emailController.text,
                             _passwordController.text,
+                            _image!,
+                            _imageName!,
                             // You can also pass _image & _imageName to backend
                           )
                           .then((value) {
-                        Navigator.pop(context);
-                        showMessage("Account Created", context);
-                        gotoPage(Login(), context);
-                      }).catchError((error) {
-                        Navigator.pop(context);
-                        showMessage(error, context, isError: true);
-                      });
+                            Navigator.pop(context);
+                            showMessage("Account Created", context);
+                            gotoPage(Login(), context);
+                          })
+                          .catchError((error) {
+                            Navigator.pop(context);
+                            showMessage(error, context, isError: true);
+                          });
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -287,7 +299,6 @@ class _SignupState extends State<Signup> {
                 ],
               ),
               SizedBox(height: 20.h),
-
               // Social Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

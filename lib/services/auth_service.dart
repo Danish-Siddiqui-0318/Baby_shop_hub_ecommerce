@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:typed_data';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,20 +19,34 @@ class AuthService {
 
   // create account
 
-  Future<void> createAccount(String name, email, pw) async {
+  Future<void> createAccount(
+    String name,
+    String email,
+    String pw,
+    Uint8List image,
+    String imageName,
+  ) async {
     try {
       // creating account
       await _auth.createUserWithEmailAndPassword(email: email, password: pw);
 
+      await supabase.storage
+          .from('user_profile_pic')
+          .uploadBinary('profile_pic/$imageName', image);
+
       String userId = _auth.currentUser!.uid;
+      // get link from supabase
+      String imageUrl = supabase.storage
+          .from('user_profile_pic')
+          .getPublicUrl('profile_pic/$imageName');
 
       // saving user data in the firestore
 
-      await _db.collection('users').doc(userId).set({
+      _db.collection('users').doc(userId).set({
         'id': userId,
         'name': name,
         'email': email,
-        'profile_pic': null,
+        'profile_pic': imageUrl,
       });
 
       // print("Account Created");
@@ -100,10 +115,10 @@ class AuthService {
   }
 
   // delete a User
-  Future<void> deleteUser(String productId) async {
+  Future<void> deleteUser(String userId) async {
     try {
       // 1. Get product data from Firestore
-      var doc = await _db.collection('users').doc(productId).get();
+      var doc = await _db.collection('users').doc(userId).get();
 
       if (!doc.exists) {
         throw Exception("Product not found");
@@ -113,24 +128,21 @@ class AuthService {
       String imageUrl = data['profile_pic'];
 
       // 2. Extract path from Supabase public URL
-      // Example URL: https://xyz.supabase.co/storage/v1/object/public/products/images/abc.png
-      // Path we need: images/abc.png
       Uri uri = Uri.parse(imageUrl);
       String path = uri.pathSegments.sublist(5).join('/');
       // "storage/v1/object/public/products/" → skip 4 segments
 
-      print("Deleting path: $path");
-
       if (data['profile_pic'] != null) {
         // 3. Delete image from Supabase
-        print("Deleting path: $path");
         await supabase.storage.from('user_profile_pic').remove([path]);
-        print("im here");
-      }else{
-        print("This is Empty");
       }
       // 4. Delete Firestore document
-      await _db.collection('users').doc(productId).delete();
+      await _db.collection('users').doc(userId).delete();
+
+      final currentUser = _auth.currentUser;
+      if (currentUser != null && currentUser.uid == userId) {
+        await currentUser.delete();
+      }
     } on FirebaseException catch (e) {
       throw getMessageFromErrorCode(e.code);
     }
