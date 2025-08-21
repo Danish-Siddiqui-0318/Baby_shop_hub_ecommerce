@@ -1,8 +1,10 @@
+import 'dart:typed_data';
 import 'package:baby_shop_hub/Admin/login.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../services/auth_service.dart';
 
@@ -25,6 +27,63 @@ class _SignupState extends State<Signup> {
   bool _obscureConfirmPassword = true;
   AuthService _authService = AuthService();
 
+  // --- Image Variables ---
+  Uint8List? _image;
+  String? _imageName;
+  final ImagePicker _picker = ImagePicker();
+
+  // pick image from gallery
+  Future<void> _pickImageFromGallery() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      _image = await pickedImage.readAsBytes();
+      _imageName = pickedImage.name;
+      setState(() {});
+    }
+  }
+
+  // pick image from camera
+  Future<void> _pickImageFromCamera() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedImage != null) {
+      _image = await pickedImage.readAsBytes();
+      _imageName = pickedImage.name;
+      setState(() {});
+    }
+  }
+
+  void _showImageSourceDialog() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+      ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.all(20.w),
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text("Pick from Gallery"),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImageFromGallery();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text("Take a Photo"),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImageFromCamera();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +93,7 @@ class _SignupState extends State<Signup> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 30.h),
               Text(
@@ -44,8 +103,24 @@ class _SignupState extends State<Signup> {
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
+                textAlign: TextAlign.center,
               ),
-              SizedBox(height: 40.h),
+              SizedBox(height: 20.h),
+
+              // --- Profile Image Picker ---
+              GestureDetector(
+                onTap: _showImageSourceDialog,
+                child: CircleAvatar(
+                  radius: 50.r,
+                  backgroundColor: Colors.grey.shade200,
+                  backgroundImage: _image != null ? MemoryImage(_image!) : null,
+                  child: _image == null
+                      ? Icon(Icons.add_a_photo,
+                          size: 40.sp, color: Colors.grey)
+                      : null,
+                ),
+              ),
+              SizedBox(height: 30.h),
 
               // Full Name Field
               TextFormField(
@@ -58,12 +133,8 @@ class _SignupState extends State<Signup> {
                     borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your full name';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Enter your full name' : null,
               ),
               SizedBox(height: 15.h),
 
@@ -122,7 +193,6 @@ class _SignupState extends State<Signup> {
                   return null;
                 },
               ),
-
               SizedBox(height: 20.h),
 
               // Confirm Password Field
@@ -158,7 +228,6 @@ class _SignupState extends State<Signup> {
                   return null;
                 },
               ),
-
               SizedBox(height: 20.h),
 
               // Sign Up Button
@@ -168,24 +237,28 @@ class _SignupState extends State<Signup> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      if (_image == null) {
+                        showMessage("Please select a profile image", context,
+                            isError: true);
+                        return;
+                      }
                       showLoading(context);
                       await _authService
                           .createAccount(
                             _nameController.text,
                             _emailController.text,
                             _passwordController.text,
+                            // You can also pass _image & _imageName to backend
                           )
                           .then((value) {
-                            Navigator.pop(context);
-                            showMessage("Account Created", context);
-                            gotoPage(Login(), context);
-                          })
-                          .catchError((error) {
-                            Navigator.pop(context);
-                            showMessage(error, context, isError: true);
-                          });
+                        Navigator.pop(context);
+                        showMessage("Account Created", context);
+                        gotoPage(Login(), context);
+                      }).catchError((error) {
+                        Navigator.pop(context);
+                        showMessage(error, context, isError: true);
+                      });
                     }
-                    ;
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFFFF3B5F),
@@ -226,7 +299,6 @@ class _SignupState extends State<Signup> {
                   _socialButton(FontAwesomeIcons.facebook, Colors.blue),
                 ],
               ),
-
               SizedBox(height: 30.h),
 
               // Already have an account link

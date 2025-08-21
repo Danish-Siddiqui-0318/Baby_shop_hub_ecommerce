@@ -3,6 +3,7 @@ import 'package:baby_shop_hub/Admin/Pages/User.dart';
 import 'package:baby_shop_hub/services/auth_service.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Admin extends StatefulWidget {
   const Admin({super.key});
@@ -46,7 +47,10 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Admin Page"),
+        title: Text(
+          "Admin Page",
+          style: TextStyle(fontSize: 18.sp),
+        ),
         backgroundColor: Colors.redAccent,
         foregroundColor: Colors.white,
       ),
@@ -54,16 +58,16 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xFFFF3B5F)),
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Color(0xFFFF3B5F)),
               child: Text(
                 "Admin Menu",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: 20.sp),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.production_quantity_limits),
-              title: const Text("Products"),
+              leading: Icon(Icons.production_quantity_limits, size: 22.sp),
+              title: Text("Products", style: TextStyle(fontSize: 15.sp)),
               onTap: () {
                 Navigator.push(
                   context,
@@ -72,8 +76,8 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.supervised_user_circle),
-              title: const Text("Users"),
+              leading: Icon(Icons.supervised_user_circle, size: 22.sp),
+              title: Text("Users", style: TextStyle(fontSize: 15.sp)),
               onTap: () {
                 Navigator.push(
                   context,
@@ -82,17 +86,14 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text("Logout"),
+              leading: Icon(Icons.logout, size: 22.sp),
+              title: Text("Logout", style: TextStyle(fontSize: 15.sp)),
               onTap: () {
-                _authService
-                    .logout()
-                    .then((value) {
-                      showMessage("Logout Successfully", context);
-                    })
-                    .catchError((error) {
-                      showMessage(error, context);
-                    });
+                _authService.logout().then((value) {
+                  showMessage("Logout Successfully", context);
+                }).catchError((error) {
+                  showMessage(error, context);
+                });
               },
             ),
           ],
@@ -105,12 +106,12 @@ class _AdminState extends State<Admin> with SingleTickerProviderStateMixin {
           position: _slideAnimation,
           child: FadeTransition(
             opacity: _fadeAnimation,
-            child: const Text(
+            child: Text(
               "👋 Welcome, Admin",
               style: TextStyle(
-                fontSize: 26,
+                fontSize: 26.sp,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFFF3B5F),
+                color: const Color(0xFFFF3B5F),
               ),
             ),
           ),
