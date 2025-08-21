@@ -3,13 +3,15 @@ import 'package:baby_shop_hub/Admin/Pages/Admin.dart';
 import 'package:baby_shop_hub/Admin/Pages/Products.dart';
 import 'package:baby_shop_hub/Admin/Pages/User.dart';
 import 'package:baby_shop_hub/Admin/Pages/auth_page.dart';
-import 'package:baby_shop_hub/Admin/signup.dart';
+import 'package:baby_shop_hub/Admin/Pages/signup.dart';
+import 'package:baby_shop_hub/Pages/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'Pages/OnBoardScreen.dart';
 import 'firebase_options.dart';
-import 'Admin/forgotPassword.dart';
+import 'Admin/Pages/forgotPassword.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(debugShowCheckedModeBanner: false, home: child);
       },
-      child:  Signup(),
+      child:  HomeScreen(),
     );
   }
 }

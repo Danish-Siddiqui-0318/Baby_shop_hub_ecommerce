@@ -1,12 +1,12 @@
 import 'dart:typed_data';
-import 'package:baby_shop_hub/Admin/login.dart';
+import 'package:baby_shop_hub/Admin/Pages/login.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../services/auth_service.dart';
+import '../../services/auth_service.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});

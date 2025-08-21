@@ -1,7 +1,7 @@
 import 'package:baby_shop_hub/Admin/Pages/Admin.dart';
-import 'package:baby_shop_hub/Admin/forgotPassword.dart';
-import 'package:baby_shop_hub/Admin/signup.dart';
-import 'package:baby_shop_hub/Home.dart';
+import 'package:baby_shop_hub/Admin/Pages/forgotPassword.dart';
+import 'package:baby_shop_hub/Admin/Pages/signup.dart';
+import 'package:baby_shop_hub/Pages/HomeScreen.dart';
 import 'package:baby_shop_hub/services/auth_service.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +141,7 @@ class _LoginState extends State<Login> {
                             )
                             .then((value) {
                               showMessage("Logged in", context);
-                              gotoAndRemoveAll(HomePage(), context);
+                              gotoAndRemoveAll(HomeScreen(), context);
                             })
                             .catchError((error) {
                               showMessage(error, context, isError: true);
