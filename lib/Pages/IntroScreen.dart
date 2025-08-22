@@ -13,8 +13,8 @@ class IntroScreen extends StatelessWidget {
         children: [
           // Background Image
           Positioned.fill(
-            child: Image.asset(
-              "assets/intro.png",
+            child: Image.network(
+              "https://i.ibb.co/Hcx1NHR/intro.png",
               fit: BoxFit.cover,
             ),
           ),

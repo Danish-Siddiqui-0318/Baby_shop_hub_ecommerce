@@ -5,7 +5,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../widgets/CustomBottomNav.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -15,9 +14,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<String> sliderImages = [
-    "assets/slider1.png",
-    "assets/slider2.png",
-    "assets/slider3.png",
+    "https://i.ibb.co/XrJWdQ43/slider3.png",
+    "https://i.ibb.co/kgwkdZbn/slider2.png",
+    "https://i.ibb.co/1BFqvyX/slider1.png",
   ];
 
   int activeIndex = 0;
@@ -26,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.55);
+    _pageController = PageController(viewportFraction: 0.5);
   }
 
   @override
@@ -45,14 +44,16 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         leading: const Icon(Icons.menu, color: Colors.black),
         centerTitle: true,
-        title: Image.asset(
-          "assets/logo.png",
+        title: Image.network(
+          "https://i.ibb.co/qMhT9ZhV/logo.png",
           height: 170.h,
           fit: BoxFit.contain,
         ),
         actions: [
           CircleAvatar(
-            backgroundImage: const AssetImage("assets/user.png"),
+            backgroundImage: const NetworkImage(
+              "https://i.ibb.co/4ZJjF9P/user.png",
+            ),
             radius: 18.r,
           ),
           SizedBox(width: 12.w),
@@ -113,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(width: 10.w),
                       Icon(Icons.filter_alt_rounded, size: 20.sp),
                     ],
-                  )
+                  ),
                 ],
               ),
               SizedBox(height: 12.h),
@@ -132,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 items: sliderImages.map((image) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(12.r),
-                    child: Image.asset(
+                    child: Image.network(
                       image,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -164,49 +165,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Trending Products
               sectionHeader("Trending Products", "View all"),
-              SizedBox(
-                height: 220.h,
-                child: Stack(
-                  children: [
-                    PageView(
-                      controller: _pageController,
-                      children: [
-                        productItem("Women Printed Kurta", "₹1500", "pro1.png"),
-                        productItem("HRX Shoes", "₹2499", "pro2.png"),
-                        productItem("White Sneakers", "₹650", "pro3.png"),
-                      ],
-                    ),
-
-                    Positioned(
-                      left: 0,
-                      top: 80.h,
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_back_ios, size: 20.sp),
-                        onPressed: () {
-                          _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                      ),
-                    ),
-
-                    Positioned(
-                      right: 0,
-                      top: 80.h,
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_forward_ios, size: 20.sp),
-                        onPressed: () {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              ListView(
+                scrollDirection: Axis.horizontal,
+                // controller: _pageController,
+                children: [
+                  const ProductCard(),
+                  const ProductCard(),
+                  const ProductCard(),
+                ],
               ),
+
               SizedBox(height: 16.h),
 
               // New Arrivals
@@ -215,10 +183,13 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 16.h),
 
               // Sponsored
-                 sectionHeader("Sponsored", ""),
-                  sponsoredBannerWidget("banner2.png", "Up to 50% Off", "Shop Now"),
-                   SizedBox(height: 20.h),
-
+              sectionHeader("Sponsored", ""),
+              sponsoredBannerWidget(
+                "https://i.ibb.co/93Y50ZHy/banner2.png",
+                "Up to 50% Off",
+                "Shop Now",
+              ),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -234,11 +205,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+        ),
         if (actionText.isNotEmpty)
           Text(
             actionText,
-            style: TextStyle(color: Colors.pinkAccent, fontSize: 14.sp, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: Colors.pinkAccent,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+            ),
           ),
       ],
     );
@@ -256,52 +234,54 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
-          Text(action, style: TextStyle(color: Colors.white, fontSize: 14.sp)),
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            action,
+            style: TextStyle(color: Colors.white, fontSize: 14.sp),
+          ),
         ],
       ),
     );
   }
 
   // Product Item Widget
+
   Widget productItem(String name, String price, String image) {
     return Container(
-      margin: EdgeInsets.only(right: 12.w, top: 10.h,bottom: 10.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+      width: 200.w,
+      height: 100.h,
+      margin: EdgeInsets.only(right: 12.w),
+      color: Colors.red,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
-            child: Image.asset(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+            child: Image.network(
               image,
-              height: 120.h,
-              width: 140.w,
-              fit: BoxFit.fill,
+              height: 180.h,
+              width: 200,
+              fit: BoxFit.contain,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.all(8.w),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(name, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500)),
-                  SizedBox(height: 4.h),
-                  Text(price, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.pinkAccent)),
-                ],
-              ),
+          Text(
+            name,
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            price,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.pinkAccent,
             ),
           ),
         ],
@@ -310,53 +290,138 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Sponsored Banner Widget
-Widget sponsoredBannerWidget(String imagePath, String title, String action) {
-  return Container(
-    margin: EdgeInsets.symmetric(vertical: 8.h),
-    height: 140.h,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12.r),
-      image: DecorationImage(
-        image: AssetImage(imagePath),
-        fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(
-          Colors.black.withOpacity(0.4), // dark overlay for white text
-          BlendMode.darken,
+  Widget sponsoredBannerWidget(String imagePath, String title, String action) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.h),
+      height: 140.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        image: DecorationImage(
+          image: NetworkImage(imagePath),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.black.withOpacity(0.4), // dark overlay for white text
+            BlendMode.darken,
+          ),
         ),
       ),
-    ),
-    child: Padding(
-      padding: EdgeInsets.all(16.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: Colors.pinkAccent,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Text(
-              action,
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-        ],
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: Colors.pinkAccent,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Text(
+                action,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
+class ProductCard extends StatelessWidget {
+  const ProductCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 100,
+      height: 150,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
+        color: Colors.red,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Product Image
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: Image.network(
+                "https://i.ibb.co/0y6zbvDk/banner1.png", // Replace with asset or network image
+                height: 140,
+                width: 100,
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            // Product Info
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    "IWC Schaffhausen 2021 Pilot's Watch \"SIHH 2019\" 44mm",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+
+                  // Price Row
+                  Row(
+                    children: [
+                      const Text(
+                        "₹650",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "₹1599",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Text(
+                        "60% off",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../Pages/HomeScreen.dart';
-import '../Pages/WishlistScreen.dart';
+import '../Pages/DetailProduct.dart';
 
 // import 'package:first_firebase_app/Admin/CartScreen.dart';
 // import 'package:first_firebase_app/Admin/SearchScreen.dart';
@@ -31,7 +31,7 @@ class CustomBottomNav extends StatelessWidget {
           case 1:
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const WishlistScreen()),
+              MaterialPageRoute(builder: (_) => const DetailProduct()),
             );
             break;
           case 2:

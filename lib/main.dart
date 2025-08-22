@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'Pages/IntroScreen.dart';
 import 'Pages/OnBoardScreen.dart';
 import 'firebase_options.dart';
 import 'Admin/Pages/forgotPassword.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(debugShowCheckedModeBanner: false, home: child);
       },
-      child:  HomeScreen(),
+      child: HomeScreen(),
     );
   }
 }
