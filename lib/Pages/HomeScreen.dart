@@ -164,15 +164,14 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 16.h),
 
               // Trending Products
+              // Trending Products
               sectionHeader("Trending Products", "View all"),
-              ListView(
-                scrollDirection: Axis.horizontal,
-                // controller: _pageController,
-                children: [
-                  // const ProductCard(),
-                  // const ProductCard(),
-                  // const ProductCard(),
-                ],
+              SizedBox(
+                height: 250.h,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: const [ProductCard(), ProductCard(), ProductCard()],
+                ),
               ),
 
               SizedBox(height: 16.h),
@@ -253,41 +252,41 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Product Item Widget
 
-  Widget productItem(String name, String price, String image) {
-    return Container(
-      width: 200.w,
-      height: 100.h,
-      margin: EdgeInsets.only(right: 12.w),
-      color: Colors.red,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-            child: Image.network(
-              image,
-              height: 180.h,
-              width: 200,
-              fit: BoxFit.contain,
-            ),
-          ),
-          Text(
-            name,
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            price,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.pinkAccent,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget productItem(String name, String price, String image) {
+  //   return Container(
+  //     width: 200.w,
+  //     height: 100.h,
+  //     margin: EdgeInsets.only(right: 12.w),
+  //     color: Colors.red,
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         ClipRRect(
+  //           borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+  //           child: Image.network(
+  //             image,
+  //             height: 180.h,
+  //             width: 200,
+  //             fit: BoxFit.contain,
+  //           ),
+  //         ),
+  //         Text(
+  //           name,
+  //           style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+  //         ),
+  //         SizedBox(height: 6.h),
+  //         Text(
+  //           price,
+  //           style: TextStyle(
+  //             fontSize: 16.sp,
+  //             fontWeight: FontWeight.bold,
+  //             color: Colors.pinkAccent,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   // Sponsored Banner Widget
   Widget sponsoredBannerWidget(String imagePath, String title, String action) {
@@ -346,31 +345,29 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 100,
-      height: 150,
+      width: 160.w, // responsive width
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
         elevation: 4,
-        color: Colors.red,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Product Image
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
               child: Image.network(
-                "https://i.ibb.co/0y6zbvDk/banner1.png", // Replace with asset or network image
-                height: 140,
-                width: 100,
+                "https://i.ibb.co/0y6zbvDk/banner1.png",
+                height: 140.h,
+                width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
 
             // Product Info
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -379,37 +376,37 @@ class ProductCard extends StatelessWidget {
                     "IWC Schaffhausen 2021 Pilot's Watch \"SIHH 2019\" 44mm",
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: 12.sp,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6.h),
 
                   // Price Row
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         "₹650",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 14.sp,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6.w),
                       Text(
                         "₹1599",
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 12.sp,
                           color: Colors.grey,
                           decoration: TextDecoration.lineThrough,
                         ),
                       ),
-                      const SizedBox(width: 6),
-                      const Text(
+                      SizedBox(width: 6.w),
+                      Text(
                         "60% off",
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 12.sp,
                           color: Colors.red,
                           fontWeight: FontWeight.w500,
                         ),
