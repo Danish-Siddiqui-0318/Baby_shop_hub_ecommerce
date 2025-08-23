@@ -169,9 +169,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 scrollDirection: Axis.horizontal,
                 // controller: _pageController,
                 children: [
-                  const ProductCard(),
-                  const ProductCard(),
-                  const ProductCard(),
+                  // const ProductCard(),
+                  // const ProductCard(),
+                  // const ProductCard(),
                 ],
               ),
 
