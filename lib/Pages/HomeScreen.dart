@@ -1,3 +1,4 @@
+import 'package:baby_shop_hub/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -13,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  ProductService _productService = ProductService();
+
   final List<String> sliderImages = [
     "https://i.ibb.co/XrJWdQ43/slider3.png",
     "https://i.ibb.co/kgwkdZbn/slider2.png",
@@ -168,14 +171,55 @@ class _HomeScreenState extends State<HomeScreen> {
               sectionHeader("Trending Products", "View all"),
               SizedBox(
                 height: 250.h,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: const [ProductCard(), ProductCard(), ProductCard()],
+                // child: ListView(
+                //   scrollDirection: Axis.horizontal,
+                //   children: const [ProductCard(), ProductCard(), ProductCard()],
+                // ),
+                child: StreamBuilder(
+                  stream: _productService.getProducts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: SizedBox(
+                          height: 30.w,
+                          width: 30.w,
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          snapshot.error.toString(),
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
+                      );
+                    } else if (snapshot.data!.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No Product Here",
+                          style: TextStyle(fontSize: 16.sp),
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        // itemCount: snapshot.data!.length,
+                        itemCount: 3,
+                        itemBuilder: (context, index) {
+                          final data = snapshot.data![index];
+                          return ProductCard(
+                            title: data['title'],
+                            desc: data['desc'],
+                            price: data['price'].toString(),
+                            imageUrl: data['imageUrl'],
+                          );
+                        },
+                      );
+                    }
+                  },
                 ),
               ),
-
               SizedBox(height: 16.h),
-
               // New Arrivals
               sectionHeader("New Arrivals", "View all"),
               bannerWidget("Hot Summer Sale", "Shop Now", Colors.orangeAccent),
@@ -340,7 +384,15 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
+  ProductCard({
+    super.key,
+    required this.title,
+    required this.desc,
+    required this.price,
+    required this.imageUrl,
+  });
+
+  String desc, price, title, imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -358,10 +410,10 @@ class ProductCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
               child: Image.network(
-                "https://i.ibb.co/0y6zbvDk/banner1.png",
+                imageUrl,
                 height: 140.h,
                 width: double.infinity,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
 
@@ -373,7 +425,7 @@ class ProductCard extends StatelessWidget {
                 children: [
                   // Title
                   Text(
-                    "IWC Schaffhausen 2021 Pilot's Watch \"SIHH 2019\" 44mm",
+                    title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -387,30 +439,13 @@ class ProductCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "₹650",
+                        price,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14.sp,
                         ),
                       ),
                       SizedBox(width: 6.w),
-                      Text(
-                        "₹1599",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                      SizedBox(width: 6.w),
-                      Text(
-                        "60% off",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
                     ],
                   ),
                 ],
