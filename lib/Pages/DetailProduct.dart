@@ -62,7 +62,7 @@ class _DetailProductState extends State<DetailProduct> {
                   borderRadius: BorderRadius.circular(12.r),
                   image: DecorationImage(
                     image: NetworkImage(product['imageUrl']),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
