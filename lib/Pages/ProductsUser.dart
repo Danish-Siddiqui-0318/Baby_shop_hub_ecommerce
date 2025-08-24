@@ -1,3 +1,4 @@
+import 'package:baby_shop_hub/Pages/DetailProduct.dart';
 import 'package:baby_shop_hub/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -201,78 +202,77 @@ class _ProductsUserState extends State<ProductsUser> {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         final data = snapshot.data![index];
-                        return Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              // product Image
-                              ClipRRect(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(12),
-                                ),
-                                child: Image.network(
-                                  data['imageUrl'],
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(
-                                        height: 150,
-                                        color: Colors.grey[200],
-                                        child: Center(
-                                          child: Icon(Icons.error_outline),
-                                        ),
-                                      ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      data['title'],
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      data['desc'],
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      data['category'],
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        color: Color.fromARGB(255, 35, 34, 34),
-                                      ),
-                                    ),
-                                    Text(
-                                      '\$${(data["price"] as double).toStringAsFixed(2)}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        color: Color.fromARGB(255, 35, 34, 34),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => DetailProduct(product: data),
+      ),
+    );
+  },
+  child: Card(
+    elevation: 2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+          child: Image.network(
+            data['imageUrl'],
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              height: 150,
+              color: Colors.grey[200],
+              child: const Center(child: Icon(Icons.error_outline)),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data['title'],
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                data['desc'],
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 8),
+              Text(
+                data['category'],
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Color.fromARGB(255, 35, 34, 34),
+                ),
+              ),
+              Text(
+                '\$${(data["price"] as double).toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Color.fromARGB(255, 35, 34, 34),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ),
+);
+
                       },
                     );
                   }

@@ -4,10 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../Pages/HomeScreen.dart';
 import '../Pages/DetailProduct.dart';
 
-// import 'package:first_firebase_app/Admin/CartScreen.dart';
-// import 'package:first_firebase_app/Admin/SearchScreen.dart';
-// import 'package:first_firebase_app/Admin/SettingScreen.dart';
-
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
 
@@ -15,56 +11,52 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      selectedItemColor: Colors.pinkAccent,
-      unselectedItemColor: Colors.grey,
-      type: BottomNavigationBarType.fixed,
-      onTap: (index) {
-        if (index == currentIndex) return; // Avoid reloading same page
-        switch (index) {
-          case 0:
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
-            );
-            break;
-          case 1:
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => ProductsUser()),
-            );
-            break;
-          case 2:
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(builder: (_) => const CartScreen()),
-            // );
-            break;
-          case 3:
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(builder: (_) => const SearchScreen()),
-            // );
-            break;
-          case 4:
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(builder: (_) => const SettingScreen()),
-            // );
-            break;
-        }
-      },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.favorite_border),
-          label: "Products",
-        ),
-        BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: "Cart"),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Setting"),
-      ],
+    return SizedBox(
+      height: 70.h, // responsive height
+      child: BottomNavigationBar(
+        currentIndex: currentIndex,
+        selectedItemColor: Colors.pinkAccent,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 12.sp, // responsive font
+        unselectedFontSize: 11.sp,
+        iconSize: 24.sp, // responsive icons
+        onTap: (index) {
+          if (index == currentIndex) return;
+          switch (index) {
+            case 0:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const HomeScreen()),
+              );
+              break;
+            case 1:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => ProductsUser()),
+              );
+              break;
+            case 2:
+              break;
+            case 3:
+              break;
+            case 4:
+              break;
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home, size: 24.sp), label: "Home"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_border, size: 24.sp), label: "Products"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart, size: 24.sp), label: "Cart"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.search, size: 24.sp), label: "Search"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings, size: 24.sp), label: "Setting"),
+        ],
+      ),
     );
   }
 }
