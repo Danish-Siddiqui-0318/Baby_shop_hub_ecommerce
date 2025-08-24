@@ -1,3 +1,4 @@
+import 'package:baby_shop_hub/Pages/ProductsUser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../Pages/HomeScreen.dart';
@@ -31,7 +32,7 @@ class CustomBottomNav extends StatelessWidget {
           case 1:
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const DetailProduct()),
+              MaterialPageRoute(builder: (_) => ProductsUser()),
             );
             break;
           case 2:
@@ -56,7 +57,10 @@ class CustomBottomNav extends StatelessWidget {
       },
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: "Wishlist"),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite_border),
+          label: "Products",
+        ),
         BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: "Cart"),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
         BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Setting"),

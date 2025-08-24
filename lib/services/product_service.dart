@@ -93,4 +93,16 @@ class ProductService {
       throw Exception("Error deleting product: $e");
     }
   }
+
+  //get Product Quantity
+
+  Stream<int> getProductsqty() {
+    return _db.collection('products').snapshots().asyncMap((snapshot) {
+      List<Map<String, dynamic>> productList = [];
+      for (var doc in snapshot.docs) {
+        productList.add(doc.data());
+      }
+      return productList.length;
+    });
+  }
 }
