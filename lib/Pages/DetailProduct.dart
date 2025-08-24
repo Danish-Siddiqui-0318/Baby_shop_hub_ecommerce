@@ -35,7 +35,7 @@ class _DetailProductState extends State<DetailProduct> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -45,7 +45,7 @@ class _DetailProductState extends State<DetailProduct> {
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black),
             onPressed: () {},
-          )
+          ),
         ],
       ),
       body: SafeArea(
@@ -110,7 +110,9 @@ class _DetailProductState extends State<DetailProduct> {
                   Text(
                     "Quantity:",
                     style: TextStyle(
-                        fontSize: 15.sp, fontWeight: FontWeight.w600),
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   SizedBox(width: 12.w),
                   Container(
@@ -128,7 +130,9 @@ class _DetailProductState extends State<DetailProduct> {
                         Text(
                           '$_quantity',
                           style: TextStyle(
-                              fontSize: 16.sp, fontWeight: FontWeight.bold),
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         IconButton(
                           onPressed: _increaseQuantity,
@@ -164,9 +168,10 @@ class _DetailProductState extends State<DetailProduct> {
                 child: Text(
                   _detailsExpanded ? 'Show less' : 'Read more',
                   style: TextStyle(
-                      color: Colors.pink,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13.sp),
+                    color: Colors.pink,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13.sp,
+                  ),
                 ),
               ),
 
@@ -178,16 +183,21 @@ class _DetailProductState extends State<DetailProduct> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {},
-                      icon: Icon(Icons.shopping_cart_outlined,
-                          color: Colors.blue, size: 20.sp),
-                      label: Text('Go to cart',
-                          style: TextStyle(
-                              color: Colors.blue, fontSize: 14.sp)),
+                      icon: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.blue,
+                        size: 20.sp,
+                      ),
+                      label: Text(
+                        'Add to Cart',
+                        style: TextStyle(color: Colors.blue, fontSize: 14.sp),
+                      ),
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         side: BorderSide(color: Colors.blue.shade100),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r)),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
                       ),
                     ),
                   ),
@@ -199,11 +209,16 @@ class _DetailProductState extends State<DetailProduct> {
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         backgroundColor: Colors.green,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r)),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
                       ),
-                      child: Text('Buy Now',
-                          style: TextStyle(
-                              fontSize: 14.sp, fontWeight: FontWeight.w600)),
+                      child: Text(
+                        'Buy Now',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -214,30 +229,35 @@ class _DetailProductState extends State<DetailProduct> {
               // Delivery Info
               Container(
                 width: double.infinity,
-                padding:
-                    EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                 decoration: BoxDecoration(
                   color: Colors.pink.shade50,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.delivery_dining,
-                        color: Colors.pink, size: 22.sp),
+                    Icon(
+                      Icons.delivery_dining,
+                      color: Colors.pink,
+                      size: 22.sp,
+                    ),
                     SizedBox(width: 10.w),
                     Expanded(
                       child: RichText(
                         text: TextSpan(
                           style: TextStyle(
-                              color: Colors.black87, fontSize: 13.sp),
+                            color: Colors.black87,
+                            fontSize: 13.sp,
+                          ),
                           children: [
                             const TextSpan(text: 'Delivery in '),
                             TextSpan(
                               text: '1 Hour',
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 14.sp),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 14.sp,
+                              ),
                             ),
                           ],
                         ),
@@ -245,10 +265,11 @@ class _DetailProductState extends State<DetailProduct> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Text('View Policy',
-                          style: TextStyle(
-                              color: Colors.pink, fontSize: 13.sp)),
-                    )
+                      child: Text(
+                        'View Policy',
+                        style: TextStyle(color: Colors.pink, fontSize: 13.sp),
+                      ),
+                    ),
                   ],
                 ),
               ),
