@@ -11,22 +11,13 @@ class DetailProduct extends StatefulWidget {
 }
 
 class _DetailProductState extends State<DetailProduct> {
-  int _currentImage = 0;
-  int _selectedSizeIndex = 1; // default: 7 UK (index)
   bool _detailsExpanded = false;
 
-  final List<String> images = [
-    // Replace these with your own image assets or network images
-    'https://images.unsplash.com/photo-1528701800487-2765d3f7f9d2?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2f2b2f1f8f4f7a0b25b6e9b7d0d9f7d9',
-    'https://images.unsplash.com/photo-1596464716121-89996f1ab3fa?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=3d9c1a4e6c5f4aee3b2b2b1c8f3d8f2a',
-    'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9a1b7c7a2e7f3d0f1f1b1c2d3a4b5c6d',
-  ];
-
-  final List<String> sizes = ['6 UK', '7 UK', '8 UK', '9 UK', '10 UK'];
+  final String productImage =
+      'https://i.ibb.co/XrJWdQ43/slider3.png';
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -51,122 +42,25 @@ class _DetailProductState extends State<DetailProduct> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image Carousel
-              SizedBox(
+              // Single Product Image
+              Container(
                 height: 240.h,
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    PageView.builder(
-                      itemCount: images.length,
-                      onPageChanged: (index) {
-                        setState(() => _currentImage = index);
-                      },
-                      itemBuilder: (context, index) {
-                        final img = images[index];
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 12.h),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.r),
-                            image: DecorationImage(
-                              image: NetworkImage(img),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    Positioned(
-                      bottom: 6.h,
-                      child: Row(
-                        children: List.generate(images.length, (i) {
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            margin: EdgeInsets.symmetric(horizontal: 4.w),
-                            width: _currentImage == i ? 22.w : 8.w,
-                            height: 6.h,
-                            decoration: BoxDecoration(
-                              color: _currentImage == i ? Colors.pinkAccent : Colors.white,
-                              borderRadius: BorderRadius.circular(4.r),
-                              border: Border.all(color: Colors.grey.shade300),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 12.h),
-
-              // Sizes horizontal chips
-              Text(
-                'Size: ${sizes[_selectedSizeIndex]}',
-                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(height: 8.h),
-              SizedBox(
-                height: 40.h,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: sizes.length,
-                  separatorBuilder: (_, __) => SizedBox(width: 8.w),
-                  itemBuilder: (context, index) {
-                    final bool selected = index == _selectedSizeIndex;
-                    return GestureDetector(
-                      onTap: () => setState(() => _selectedSizeIndex = index),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                        decoration: BoxDecoration(
-                          color: selected ? Colors.pinkAccent.shade100 : Colors.white,
-                          borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(
-                            color: selected ? Colors.pink : Colors.grey.shade300,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            sizes[index],
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w600,
-                              color: selected ? Colors.white : Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                margin: EdgeInsets.only(bottom: 12.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  image: DecorationImage(
+                    image: NetworkImage(productImage),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
 
               SizedBox(height: 16.h),
 
-              // Title, Rating & Stats
+              // Title
               Text(
                 'NIke Sneakers',
                 style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 6.h),
-              Row(
-                children: [
-                  // Stars
-                  Row(
-                    children: List.generate(5, (i) {
-                      return Icon(
-                        i < 4 ? Icons.star : Icons.star_border,
-                        size: 16.sp,
-                        color: Colors.amber,
-                      );
-                    }),
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    '56,890',
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12.sp),
-                  ),
-                ],
               ),
 
               SizedBox(height: 10.h),
@@ -320,7 +214,7 @@ class _DetailProductState extends State<DetailProduct> {
                       title: 'Nike Sneakers',
                       price: '\$1,900',
                       rating: 4.5,
-                      imageUrl: images[(index + 1) % images.length],
+                      imageUrl: productImage,
                     );
                   },
                 ),
@@ -380,14 +274,6 @@ class _SimilarItemCard extends StatelessWidget {
                 Text(title, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600)),
                 SizedBox(height: 6.h),
                 Text(price, style: TextStyle(fontSize: 13.sp, color: Colors.black, fontWeight: FontWeight.bold)),
-                SizedBox(height: 6.h),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.amber, size: 12.sp),
-                    SizedBox(width: 4.w),
-                    Text(rating.toString(), style: TextStyle(fontSize: 11.sp)),
-                  ],
-                )
               ],
             ),
           )

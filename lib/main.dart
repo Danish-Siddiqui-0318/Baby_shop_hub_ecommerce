@@ -4,6 +4,7 @@ import 'package:baby_shop_hub/Admin/Pages/Products.dart';
 import 'package:baby_shop_hub/Admin/Pages/User.dart';
 import 'package:baby_shop_hub/Admin/Pages/auth_page.dart';
 import 'package:baby_shop_hub/Admin/Pages/signup.dart';
+import 'package:baby_shop_hub/Pages/DetailProduct.dart';
 import 'package:baby_shop_hub/Pages/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(debugShowCheckedModeBanner: false, home: child);
       },
-      child: ProductsUser(),
+      child: DetailProduct(),
     );
   }
 }
