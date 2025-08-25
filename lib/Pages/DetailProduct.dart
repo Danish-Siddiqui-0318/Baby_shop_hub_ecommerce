@@ -45,7 +45,7 @@ class _DetailProductState extends State<DetailProduct> {
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black),
             onPressed: () {},
-          )
+          ),
         ],
       ),
       body: SafeArea(
@@ -55,14 +55,16 @@ class _DetailProductState extends State<DetailProduct> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Product Image
-              Container(
-                height: 240.h,
-                margin: EdgeInsets.only(bottom: 12.h),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                  image: DecorationImage(
-                    image: NetworkImage(product['imageUrl']),
-                    fit: BoxFit.cover,
+              InteractiveViewer(
+                child: Container(
+                  height: 240.h,
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    image: DecorationImage(
+                      image: NetworkImage(product['imageUrl']),
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ),
@@ -105,42 +107,45 @@ class _DetailProductState extends State<DetailProduct> {
               SizedBox(height: 14.h),
 
               // Quantity Selector
-              Row(
-                children: [
-                  Text(
-                    "Quantity:",
-                    style: TextStyle(
-                        fontSize: 15.sp, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(width: 12.w),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: _decreaseQuantity,
-                          icon: const Icon(Icons.remove),
-                          color: Colors.red,
-                        ),
-                        Text(
-                          '$_quantity',
-                          style: TextStyle(
-                              fontSize: 16.sp, fontWeight: FontWeight.bold),
-                        ),
-                        IconButton(
-                          onPressed: _increaseQuantity,
-                          icon: const Icon(Icons.add),
-                          color: Colors.green,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-
+              // Row(
+              //   children: [
+              //     Text(
+              //       "Quantity:",
+              //       style: TextStyle(
+              //         fontSize: 15.sp,
+              //         fontWeight: FontWeight.w600,
+              //       ),
+              //     ),
+              //     SizedBox(width: 12.w),
+              //     Container(
+              //       decoration: BoxDecoration(
+              //         border: Border.all(color: Colors.grey.shade300),
+              //         borderRadius: BorderRadius.circular(8.r),
+              //       ),
+              //       child: Row(
+              //         children: [
+              //           IconButton(
+              //             onPressed: _decreaseQuantity,
+              //             icon: const Icon(Icons.remove),
+              //             color: Colors.red,
+              //           ),
+              //           Text(
+              //             '$_quantity',
+              //             style: TextStyle(
+              //               fontSize: 16.sp,
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //           ),
+              //           IconButton(
+              //             onPressed: _increaseQuantity,
+              //             icon: const Icon(Icons.add),
+              //             color: Colors.green,
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(height: 16.h),
 
               // Product Details
@@ -164,9 +169,10 @@ class _DetailProductState extends State<DetailProduct> {
                 child: Text(
                   _detailsExpanded ? 'Show less' : 'Read more',
                   style: TextStyle(
-                      color: Colors.pink,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13.sp),
+                    color: Colors.pink,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13.sp,
+                  ),
                 ),
               ),
 
@@ -178,16 +184,21 @@ class _DetailProductState extends State<DetailProduct> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {},
-                      icon: Icon(Icons.shopping_cart_outlined,
-                          color: Colors.blue, size: 20.sp),
-                      label: Text('Go to cart',
-                          style: TextStyle(
-                              color: Colors.blue, fontSize: 14.sp)),
+                      icon: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.blue,
+                        size: 20.sp,
+                      ),
+                      label: Text(
+                        'Go to cart',
+                        style: TextStyle(color: Colors.blue, fontSize: 14.sp),
+                      ),
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         side: BorderSide(color: Colors.blue.shade100),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r)),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
                       ),
                     ),
                   ),
@@ -199,11 +210,16 @@ class _DetailProductState extends State<DetailProduct> {
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         backgroundColor: Colors.green,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r)),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
                       ),
-                      child: Text('Buy Now',
-                          style: TextStyle(
-                              fontSize: 14.sp, fontWeight: FontWeight.w600)),
+                      child: Text(
+                        'Buy Now',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -214,30 +230,35 @@ class _DetailProductState extends State<DetailProduct> {
               // Delivery Info
               Container(
                 width: double.infinity,
-                padding:
-                    EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                 decoration: BoxDecoration(
                   color: Colors.pink.shade50,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.delivery_dining,
-                        color: Colors.pink, size: 22.sp),
+                    Icon(
+                      Icons.delivery_dining,
+                      color: Colors.pink,
+                      size: 22.sp,
+                    ),
                     SizedBox(width: 10.w),
                     Expanded(
                       child: RichText(
                         text: TextSpan(
                           style: TextStyle(
-                              color: Colors.black87, fontSize: 13.sp),
+                            color: Colors.black87,
+                            fontSize: 13.sp,
+                          ),
                           children: [
                             const TextSpan(text: 'Delivery in '),
                             TextSpan(
                               text: '1 Hour',
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 14.sp),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 14.sp,
+                              ),
                             ),
                           ],
                         ),
@@ -245,10 +266,11 @@ class _DetailProductState extends State<DetailProduct> {
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: Text('View Policy',
-                          style: TextStyle(
-                              color: Colors.pink, fontSize: 13.sp)),
-                    )
+                      child: Text(
+                        'View Policy',
+                        style: TextStyle(color: Colors.pink, fontSize: 13.sp),
+                      ),
+                    ),
                   ],
                 ),
               ),
