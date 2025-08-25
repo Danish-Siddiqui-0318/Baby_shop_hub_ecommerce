@@ -35,7 +35,7 @@ class _DetailProductState extends State<DetailProduct> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -55,16 +55,14 @@ class _DetailProductState extends State<DetailProduct> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Product Image
-              InteractiveViewer(
-                child: Container(
-                  height: 240.h,
-                  margin: EdgeInsets.only(bottom: 12.h),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r),
-                    image: DecorationImage(
-                      image: NetworkImage(product['imageUrl']),
-                      fit: BoxFit.fill,
-                    ),
+              Container(
+                height: 240.h,
+                margin: EdgeInsets.only(bottom: 12.h),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  image: DecorationImage(
+                    image: NetworkImage(product['imageUrl']),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -107,45 +105,42 @@ class _DetailProductState extends State<DetailProduct> {
               SizedBox(height: 14.h),
 
               // Quantity Selector
-              // Row(
-              //   children: [
-              //     Text(
-              //       "Quantity:",
-              //       style: TextStyle(
-              //         fontSize: 15.sp,
-              //         fontWeight: FontWeight.w600,
-              //       ),
-              //     ),
-              //     SizedBox(width: 12.w),
-              //     Container(
-              //       decoration: BoxDecoration(
-              //         border: Border.all(color: Colors.grey.shade300),
-              //         borderRadius: BorderRadius.circular(8.r),
-              //       ),
-              //       child: Row(
-              //         children: [
-              //           IconButton(
-              //             onPressed: _decreaseQuantity,
-              //             icon: const Icon(Icons.remove),
-              //             color: Colors.red,
-              //           ),
-              //           Text(
-              //             '$_quantity',
-              //             style: TextStyle(
-              //               fontSize: 16.sp,
-              //               fontWeight: FontWeight.bold,
-              //             ),
-              //           ),
-              //           IconButton(
-              //             onPressed: _increaseQuantity,
-              //             icon: const Icon(Icons.add),
-              //             color: Colors.green,
-              //           ),
-              //         ],
-              //       ),
-              //     ),
-              //   ],
-              // ),
+              Row(
+                children: [
+                  Text(
+                    "Quantity:",
+                    style: TextStyle(
+                        fontSize: 15.sp, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(width: 12.w),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: _decreaseQuantity,
+                          icon: const Icon(Icons.remove),
+                          color: Colors.red,
+                        ),
+                        Text(
+                          '$_quantity',
+                          style: TextStyle(
+                              fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          onPressed: _increaseQuantity,
+                          icon: const Icon(Icons.add),
+                          color: Colors.green,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
               SizedBox(height: 16.h),
 
               // Product Details
@@ -184,15 +179,11 @@ class _DetailProductState extends State<DetailProduct> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {},
-                      icon: Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Colors.blue,
-                        size: 20.sp,
-                      ),
-                      label: Text(
-                        'Go to cart',
-                        style: TextStyle(color: Colors.blue, fontSize: 14.sp),
-                      ),
+                      icon: Icon(Icons.shopping_cart_outlined,
+                          color: Colors.blue, size: 20.sp),
+                      label: Text('Go to cart',
+                          style: TextStyle(
+                              color: Colors.blue, fontSize: 14.sp)),
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         side: BorderSide(color: Colors.blue.shade100),
