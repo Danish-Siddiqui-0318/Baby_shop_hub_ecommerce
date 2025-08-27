@@ -92,10 +92,11 @@ class AuthService {
   // get user details
   Future<Map<String, dynamic>?> getUsersDetails() async {
     try {
-      var userDoc = await _db
-          .collection('users')
-          .doc(_auth.currentUser!.uid)
-          .get();
+      var uid = _auth.currentUser!.uid;
+      var userDoc = await _db.collection('users').doc(uid).get();
+      print(userDoc);
+      print("Document exists? ${userDoc.exists}");
+      print("Data: ${userDoc.data()}");
       return userDoc.data();
     } on FirebaseException catch (e) {
       throw e.message ?? "Something went wrong";

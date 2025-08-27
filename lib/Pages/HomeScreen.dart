@@ -1,4 +1,6 @@
+import 'package:baby_shop_hub/services/auth_service.dart';
 import 'package:baby_shop_hub/services/product_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,12 +17,32 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   ProductService _productService = ProductService();
+  AuthService _authService = AuthService();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Map<String, dynamic>? _userData; // variable to store user data
+  // bool _isLoading = true;
 
   final List<String> sliderImages = [
     "https://i.ibb.co/XrJWdQ43/slider3.png",
     "https://i.ibb.co/kgwkdZbn/slider2.png",
     "https://i.ibb.co/1BFqvyX/slider1.png",
   ];
+
+  // Future<void> _fetchUserData() async {
+  //   try {
+  //     var data = await _authService.getUsersDetails();
+  //     setState(() {
+  //       _userData = data;
+  //       _isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     print("Error fetching user data: $e");
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
 
   int activeIndex = 0;
   late PageController _pageController;
@@ -29,6 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(viewportFraction: 0.5);
+    // print(_auth.currentUser!.uid);
+    // getUserDetail();
+    // _fetchUserData();
+    // print(_userData);
   }
 
   @override
@@ -53,14 +79,32 @@ class _HomeScreenState extends State<HomeScreen> {
           fit: BoxFit.contain,
         ),
         actions: [
-          CircleAvatar(
-            backgroundImage: const NetworkImage(
-              "https://i.ibb.co/4ZJjF9P/user.png",
-            ),
-            radius: 18.r,
+          FutureBuilder<Map<String, dynamic>?>(
+            future: _authService.getUsersDetails(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                );
+              } else if (snapshot.hasError) {
+                return const Icon(Icons.error, color: Colors.red);
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return const Icon(Icons.account_circle, color: Colors.grey);
+              } else {
+                var userData = snapshot.data!;
+                return Padding(
+                  padding: EdgeInsets.only(right: 8.w),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(userData['profile_pic']),
+                    radius: 18.r,
+                  ),
+                );
+              }
+            },
           ),
-          SizedBox(width: 12.w),
         ],
+
       ),
 
       body: SingleChildScrollView(
@@ -457,3 +501,8 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
+
+// child: CircleAvatar(
+// backgroundImage: NetworkImage(_userData!['profile_pic']),
+// radius: 18.r,
+// ),
