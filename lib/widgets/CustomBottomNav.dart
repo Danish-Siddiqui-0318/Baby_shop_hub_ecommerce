@@ -14,9 +14,10 @@ class CustomBottomNav extends StatelessWidget {
     return SizedBox(
       height: 70.h, // responsive height
       child: BottomNavigationBar(
+        backgroundColor: Color.fromARGB(255, 248, 55, 87),
         currentIndex: currentIndex,
-        selectedItemColor: Colors.pinkAccent,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.amberAccent,
+        unselectedItemColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 12.sp, // responsive font
         unselectedFontSize: 11.sp,
@@ -46,15 +47,25 @@ class CustomBottomNav extends StatelessWidget {
         },
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home, size: 24.sp), label: "Home"),
+            icon: Icon(Icons.home, size: 24.sp),
+            label: "Home",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_border, size: 24.sp), label: "Products"),
+            icon: Icon(Icons.favorite_border, size: 24.sp),
+            label: "Products",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart, size: 24.sp), label: "Cart"),
+            icon: Icon(Icons.shopping_cart, size: 24.sp),
+            label: "Cart",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.search, size: 24.sp), label: "Search"),
+            icon: Icon(Icons.search, size: 24.sp),
+            label: "Search",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings, size: 24.sp), label: "Setting"),
+            icon: Icon(Icons.settings, size: 24.sp),
+            label: "Setting",
+          ),
         ],
       ),
     );

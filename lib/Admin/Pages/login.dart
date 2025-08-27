@@ -144,6 +144,7 @@ class _LoginState extends State<Login> {
                               gotoAndRemoveAll(HomeScreen(), context);
                             })
                             .catchError((error) {
+                              Navigator.pop(context);
                               showMessage(error, context, isError: true);
                             });
                       }

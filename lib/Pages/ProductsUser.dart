@@ -1,6 +1,7 @@
 import 'package:baby_shop_hub/Pages/DetailProduct.dart';
 import 'package:baby_shop_hub/services/product_service.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
+import 'package:baby_shop_hub/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -18,35 +19,23 @@ class _ProductsUserState extends State<ProductsUser> {
   ProductService _productService = ProductService();
   int? productsQty;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _productService.getProductsqty().listen((event)=>(productsQty=event));
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _productService.getProductsqty().listen((qty) {
+      setState(() {
+        productsQty = qty;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.grey.shade200,
-        leading: const Icon(Icons.menu, color: Colors.black),
-        centerTitle: true,
-        title: Image.network(
-          "https://i.ibb.co/qMhT9ZhV/logo.png",
-          height: 170.h,
-          fit: BoxFit.contain,
-        ),
-        actions: [
-          CircleAvatar(
-            backgroundImage: const NetworkImage(
-              "https://i.ibb.co/4ZJjF9P/user.png",
-            ),
-            radius: 18.r,
-          ),
-          SizedBox(width: 12.w),
-        ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.h),
+        child: OwnAppBar(),
       ),
 
       body: Padding(
@@ -209,71 +198,95 @@ class _ProductsUserState extends State<ProductsUser> {
                               context,
                               MaterialPageRoute(
                                 builder: (_) => DetailProduct(product: data),
-      ),
-    );
-  },
-  child: Card(
-    elevation: 2,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-          child: Image.network(
-            data['imageUrl'],
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              height: 150,
-              color: Colors.grey[200],
-              child: const Center(child: Icon(Icons.error_outline)),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                data['title'],
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                data['desc'],
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: 8),
-              Text(
-                data['category'],
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Color.fromARGB(255, 35, 34, 34),
-                ),
-              ),
-              Text(
-                '\$${(data["price"] as double).toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Color.fromARGB(255, 35, 34, 34),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  ),
-);
-
+                              ),
+                            );
+                          },
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(12),
+                                  ),
+                                  child: Image.network(
+                                    data['imageUrl'],
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
+                                              height: 150,
+                                              color: Colors.grey[200],
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.error_outline,
+                                                ),
+                                              ),
+                                            ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        data['title'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        data['desc'],
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        data['category'],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Color.fromARGB(
+                                            255,
+                                            35,
+                                            34,
+                                            34,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$${(data["price"] as double).toStringAsFixed(2)}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Color.fromARGB(
+                                            255,
+                                            35,
+                                            34,
+                                            34,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
                     );
                   }

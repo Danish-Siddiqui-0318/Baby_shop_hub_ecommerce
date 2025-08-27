@@ -1,5 +1,9 @@
+import 'package:baby_shop_hub/Admin/Pages/login.dart';
 import 'package:baby_shop_hub/services/auth_service.dart';
 import 'package:baby_shop_hub/services/product_service.dart';
+import 'package:baby_shop_hub/utils/helper.dart';
+import 'package:baby_shop_hub/widgets/appbar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,10 +55,28 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(viewportFraction: 0.5);
+    getUserData();
     // print(_auth.currentUser!.uid);
     // getUserDetail();
     // _fetchUserData();
     // print(_userData);
+  }
+
+  Map<String, dynamic>? _userData = {};
+
+  getUserData() {
+    print("function called");
+    _authService
+        .getUsersDetails()
+        .then((data) {
+          print(data);
+          setState(() {
+            _userData = data;
+          });
+        })
+        .catchError((error) {
+          print("Error fetching user data: $error");
+        });
   }
 
   @override
@@ -68,43 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: const Icon(Icons.menu, color: Colors.black),
-        centerTitle: true,
-        title: Image.network(
-          "https://i.ibb.co/qMhT9ZhV/logo.png",
-          height: 170.h,
-          fit: BoxFit.contain,
-        ),
-        actions: [
-          FutureBuilder<Map<String, dynamic>?>(
-            future: _authService.getUsersDetails(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                );
-              } else if (snapshot.hasError) {
-                return const Icon(Icons.error, color: Colors.red);
-              } else if (!snapshot.hasData || snapshot.data == null) {
-                return const Icon(Icons.account_circle, color: Colors.grey);
-              } else {
-                var userData = snapshot.data!;
-                return Padding(
-                  padding: EdgeInsets.only(right: 8.w),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(userData['profile_pic']),
-                    radius: 18.r,
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.h),
+        child: OwnAppBar(),
       ),
 
       body: SingleChildScrollView(
@@ -501,8 +489,3 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
-
-// child: CircleAvatar(
-// backgroundImage: NetworkImage(_userData!['profile_pic']),
-// radius: 18.r,
-// ),

@@ -63,8 +63,9 @@ class AuthService {
           .signInWithEmailAndPassword(email: email, password: pw)
           .timeout(Duration(seconds: 25));
       print("login success");
-    } on FirebaseException catch (e) {
-      print(getMessageFromErrorCode(e.toString()));
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      throw e.message ?? "Something went wrong";
     }
   }
 
@@ -94,10 +95,10 @@ class AuthService {
     try {
       var uid = _auth.currentUser!.uid;
       var userDoc = await _db.collection('users').doc(uid).get();
-      print(userDoc);
-      print("Document exists? ${userDoc.exists}");
-      print("Data: ${userDoc.data()}");
-      return userDoc.data();
+      // print(userDoc);
+      // print("Document exists? ${userDoc.exists}");
+      // print("Data: ${userDoc.data()}");
+      return userDoc.data() as Map<String, dynamic>;
     } on FirebaseException catch (e) {
       throw e.message ?? "Something went wrong";
     }
