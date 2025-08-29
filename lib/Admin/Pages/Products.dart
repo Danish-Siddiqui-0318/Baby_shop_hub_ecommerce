@@ -1,9 +1,11 @@
 import 'package:baby_shop_hub/Admin/Pages/AddProducts.dart';
 import 'package:baby_shop_hub/Admin/Pages/Admin.dart';
+import 'package:baby_shop_hub/provider/product_provider.dart';
 import 'package:baby_shop_hub/services/product_service.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class Products extends StatelessWidget {
   Products({super.key});
@@ -27,37 +29,22 @@ class Products extends StatelessWidget {
           child: Icon(Icons.arrow_back_ios, size: 20.sp),
         ),
       ),
-      body: StreamBuilder(
-        stream: _productService.getProducts(),
-        builder: (context, snpashot) {
-          if (snpashot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: SizedBox(
-                width: 30.w,
-                height: 30.w,
-                child: const CircularProgressIndicator(),
-              ),
-            );
-          } else if (snpashot.hasError) {
-            return Center(
-              child: Text(
-                snpashot.error.toString(),
-                style: TextStyle(fontSize: 14.sp),
-              ),
-            );
-          } else if (snpashot.data!.isEmpty) {
-            return Center(
-              child: Text(
-                "No Product Here",
-                style: TextStyle(fontSize: 16.sp),
-              ),
-            );
-          } else {
-            return ListView.builder(
-              itemCount: snpashot.data!.length,
-              itemBuilder: (context, index) {
-                var data = snpashot.data![index];
-                return Padding(
+
+      body: Consumer<ProductProvider>(
+  builder: (context, provider, child) {
+    if (provider.state  == ProductState.loading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (provider.state == ProductState.error) {
+      return Center(child: Text('Error: ${provider.errorMessage}'));
+    } else if (provider.state == ProductState.loaded) {
+      return ListView.builder(
+                        cacheExtent: 1000,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: provider.products.length,
+                        // itemCount: 3,
+                        itemBuilder: (context, index) {
+                          final data = provider.products[index];
+                          return Padding(
                   padding: EdgeInsets.all(5.w),
                   child: Card(
                     elevation: 3,
@@ -111,11 +98,101 @@ class Products extends StatelessWidget {
                     ),
                   ),
                 );
-              },
-            );
-          }
-        },
-      ),
+                        },
+                      );
+    }
+    return const Center(child: Text("Press button to load products"));
+  },
+),
+      // body: StreamBuilder(
+      //   stream: _productService.getProducts(),
+      //   builder: (context, snpashot) {
+      //     if (snpashot.connectionState == ConnectionState.waiting) {
+      //       return Center(
+      //         child: SizedBox(
+      //           width: 30.w,
+      //           height: 30.w,
+      //           child: const CircularProgressIndicator(),
+      //         ),
+      //       );
+      //     } else if (snpashot.hasError) {
+      //       return Center(
+      //         child: Text(
+      //           snpashot.error.toString(),
+      //           style: TextStyle(fontSize: 14.sp),
+      //         ),
+      //       );
+      //     } else if (snpashot.data!.isEmpty) {
+      //       return Center(
+      //         child: Text(
+      //           "No Product Here",
+      //           style: TextStyle(fontSize: 16.sp),
+      //         ),
+      //       );
+      //     } else {
+      //       return ListView.builder(
+      //         itemCount: snpashot.data!.length,
+      //         itemBuilder: (context, index) {
+      //           var data = snpashot.data![index];
+      //           return Padding(
+      //             padding: EdgeInsets.all(5.w),
+      //             child: Card(
+      //               elevation: 3,
+      //               shape: RoundedRectangleBorder(
+      //                 borderRadius: BorderRadius.circular(8.r),
+      //               ),
+      //               child: ListTile(
+      //                 leading: CircleAvatar(
+      //                   backgroundImage: NetworkImage(data['imageUrl']),
+      //                   radius: 25.r,
+      //                 ),
+      //                 title: Text(
+      //                   data['title'],
+      //                   style: TextStyle(fontSize: 16.sp),
+      //                 ),
+      //                 isThreeLine: true,
+      //                 subtitle: Column(
+      //                   crossAxisAlignment: CrossAxisAlignment.start,
+      //                   children: [
+      //                     Text(
+      //                       "Category: ${data['category']}",
+      //                       style: TextStyle(fontSize: 13.sp),
+      //                     ),
+      //                     Text(
+      //                       "Price:  \$${data['price']}",
+      //                       style: TextStyle(fontSize: 13.sp),
+      //                     ),
+      //                   ],
+      //                 ),
+      //                 trailing: Column(
+      //                   mainAxisAlignment: MainAxisAlignment.center,
+      //                   children: [
+      //                     GestureDetector(
+      //                       onTap: () async {
+      //                         showLoading(context);
+      //                         await _productService
+      //                             .deleteProduct(data['id'])
+      //                             .then((value) {
+      //                           Navigator.pop(context);
+      //                           showMessage("Product Deleted", context);
+      //                         }).catchError((error) {
+      //                           Navigator.pop(context);
+      //                           showMessage(error, context, isError: true);
+      //                         });
+      //                       },
+      //                       child: Icon(Icons.delete,
+      //                           color: Colors.red, size: 22.sp),
+      //                     ),
+      //                   ],
+      //                 ),
+      //               ),
+      //             ),
+      //           );
+      //         },
+      //       );
+      //     }
+      //   },
+      // ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
         onPressed: () {

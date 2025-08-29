@@ -1,5 +1,6 @@
 import 'package:baby_shop_hub/Admin/Pages/login.dart';
 import 'package:baby_shop_hub/Pages/HomeScreen.dart';
+import 'package:baby_shop_hub/Pages/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -12,7 +13,7 @@ class AuthGate extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return HomeScreen();
+          return NavigationPage();
         } else {
           return Login();
         }

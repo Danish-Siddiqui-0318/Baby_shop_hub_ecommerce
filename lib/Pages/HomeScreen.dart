@@ -1,4 +1,5 @@
 import 'package:baby_shop_hub/Admin/Pages/login.dart';
+import 'package:baby_shop_hub/provider/product_provider.dart';
 import 'package:baby_shop_hub/services/auth_service.dart';
 import 'package:baby_shop_hub/services/product_service.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../widgets/CustomBottomNav.dart';
@@ -203,42 +205,20 @@ class _HomeScreenState extends State<HomeScreen> {
               sectionHeader("Trending Products", "View all"),
               SizedBox(
                 height: 250.h,
-                // child: ListView(
-                //   scrollDirection: Axis.horizontal,
-                //   children: const [ProductCard(), ProductCard(), ProductCard()],
-                // ),
-                child: StreamBuilder(
-                  stream: _productService.getProducts(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: SizedBox(
-                          height: 30.w,
-                          width: 30.w,
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          snapshot.error.toString(),
-                          style: TextStyle(fontSize: 14.sp),
-                        ),
-                      );
-                    } else if (snapshot.data!.isEmpty) {
-                      return Center(
-                        child: Text(
-                          "No Product Here",
-                          style: TextStyle(fontSize: 16.sp),
-                        ),
-                      );
-                    } else {
-                      return ListView.builder(
+                child: Consumer<ProductProvider>(
+  builder: (context, provider, child) {
+    if (provider.state  == ProductState.loading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (provider.state == ProductState.error) {
+      return Center(child: Text('Error: ${provider.errorMessage}'));
+    } else if (provider.state == ProductState.loaded) {
+      return ListView.builder(
+                        cacheExtent: 1000,
                         scrollDirection: Axis.horizontal,
                         // itemCount: snapshot.data!.length,
                         itemCount: 3,
                         itemBuilder: (context, index) {
-                          final data = snapshot.data![index];
+                          final data = provider.products[index];
                           return ProductCard(
                             title: data['title'],
                             desc: data['desc'],
@@ -247,9 +227,59 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       );
-                    }
-                  },
-                ),
+    }
+    return const Center(child: Text("Press button to load products"));
+  },
+)
+
+                // child: ListView(
+                //   scrollDirection: Axis.horizontal,
+                //   children: const [ProductCard(), ProductCard(), ProductCard()],
+                // ),
+                // child: StreamBuilder(
+                //   stream: _productService.getProducts(),
+                //   builder: (context, snapshot) {
+                //     if (snapshot.connectionState == ConnectionState.waiting) {
+                //       return Center(
+                //         child: SizedBox(
+                //           height: 30.w,
+                //           width: 30.w,
+                //           child: CircularProgressIndicator(),
+                //         ),
+                //       );
+                //     } else if (snapshot.hasError) {
+                //       return Center(
+                //         child: Text(
+                //           snapshot.error.toString(),
+                //           style: TextStyle(fontSize: 14.sp),
+                //         ),
+                //       );
+                //     } else if (snapshot.data!.isEmpty) {
+                //       return Center(
+                //         child: Text(
+                //           "No Product Here",
+                //           style: TextStyle(fontSize: 16.sp),
+                //         ),
+                //       );
+                //     } else {
+                //       return ListView.builder(
+                //         cacheExtent: 1000,
+                //         scrollDirection: Axis.horizontal,
+                //         // itemCount: snapshot.data!.length,
+                //         itemCount: 3,
+                //         itemBuilder: (context, index) {
+                //           final data = snapshot.data![index];
+                //           return ProductCard(
+                //             title: data['title'],
+                //             desc: data['desc'],
+                //             price: data['price'].toString(),
+                //             imageUrl: data['imageUrl'],
+                //           );
+                //         },
+                //       );
+                //     }
+                //   },
+                // ),
               ),
               SizedBox(height: 16.h),
               // New Arrivals
@@ -271,7 +301,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       // Custom Bottom Nav Bar
-      bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
     );
   }
 

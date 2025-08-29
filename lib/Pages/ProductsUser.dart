@@ -1,10 +1,12 @@
 import 'package:baby_shop_hub/Pages/DetailProduct.dart';
+import 'package:baby_shop_hub/provider/product_provider.dart';
 import 'package:baby_shop_hub/services/product_service.dart';
 import 'package:baby_shop_hub/utils/helper.dart';
 import 'package:baby_shop_hub/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/CustomBottomNav.dart';
 
@@ -159,39 +161,21 @@ class _ProductsUserState extends State<ProductsUser> {
 
             // fetching products
             Expanded(
-              child: StreamBuilder(
-                stream: _productService.getProducts(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: SizedBox(
-                        width: 30.w,
-                        height: 30.w,
-                        child: const CircularProgressIndicator(),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        snapshot.error.toString(),
-                        style: TextStyle(fontSize: 14.sp),
-                      ),
-                    );
-                  } else if (snapshot.data!.isEmpty) {
-                    return Center(
-                      child: Text(
-                        "No Product Here",
-                        style: TextStyle(fontSize: 16.sp),
-                      ),
-                    );
-                  } else {
-                    return MasonryGridView.count(
+              child: Consumer<ProductProvider>(
+  builder: (context, provider, child) {
+    print(provider.state);
+    if (provider.state  == ProductState.loading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (provider.state == ProductState.error) {
+      return Center(child: Text('Error: ${provider.errorMessage}'));
+    } else if (provider.state == ProductState.loaded) {
+      return MasonryGridView.count(
                       crossAxisCount: 2,
                       mainAxisSpacing: 8,
                       crossAxisSpacing: 8,
-                      itemCount: snapshot.data!.length,
+                      itemCount: provider.products.length,
                       itemBuilder: (context, index) {
-                        final data = snapshot.data![index];
+                        final data = provider.products[index];
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -289,14 +273,147 @@ class _ProductsUserState extends State<ProductsUser> {
                         );
                       },
                     );
-                  }
-                },
-              ),
+    }
+    return const Center(child: Text("Press button to load products"));
+  },
+),
+              // child: StreamBuilder(
+              //   stream: _productService.getProducts(),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return Center(
+              //         child: SizedBox(
+              //           width: 30.w,
+              //           height: 30.w,
+              //           child: const CircularProgressIndicator(),
+              //         ),
+              //       );
+              //     } else if (snapshot.hasError) {
+              //       return Center(
+              //         child: Text(
+              //           snapshot.error.toString(),
+              //           style: TextStyle(fontSize: 14.sp),
+              //         ),
+              //       );
+              //     } else if (snapshot.data!.isEmpty) {
+              //       return Center(
+              //         child: Text(
+              //           "No Product Here",
+              //           style: TextStyle(fontSize: 16.sp),
+              //         ),
+              //       );
+              //     } else {
+              //       return MasonryGridView.count(
+              //         crossAxisCount: 2,
+              //         mainAxisSpacing: 8,
+              //         crossAxisSpacing: 8,
+              //         itemCount: snapshot.data!.length,
+              //         itemBuilder: (context, index) {
+              //           final data = snapshot.data![index];
+              //           return GestureDetector(
+              //             onTap: () {
+              //               Navigator.push(
+              //                 context,
+              //                 MaterialPageRoute(
+              //                   builder: (_) => DetailProduct(product: data),
+              //                 ),
+              //               );
+              //             },
+              //             child: Card(
+              //               elevation: 2,
+              //               shape: RoundedRectangleBorder(
+              //                 borderRadius: BorderRadius.circular(12),
+              //               ),
+              //               child: Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.stretch,
+              //                 children: [
+              //                   ClipRRect(
+              //                     borderRadius: BorderRadius.vertical(
+              //                       top: Radius.circular(12),
+              //                     ),
+              //                     child: Image.network(
+              //                       data['imageUrl'],
+              //                       fit: BoxFit.cover,
+              //                       errorBuilder:
+              //                           (context, error, stackTrace) =>
+              //                               Container(
+              //                                 height: 150,
+              //                                 color: Colors.grey[200],
+              //                                 child: const Center(
+              //                                   child: Icon(
+              //                                     Icons.error_outline,
+              //                                   ),
+              //                                 ),
+              //                               ),
+              //                     ),
+              //                   ),
+              //                   Padding(
+              //                     padding: const EdgeInsets.all(8.0),
+              //                     child: Column(
+              //                       crossAxisAlignment:
+              //                           CrossAxisAlignment.start,
+              //                       children: [
+              //                         Text(
+              //                           data['title'],
+              //                           style: TextStyle(
+              //                             fontWeight: FontWeight.bold,
+              //                             fontSize: 16,
+              //                           ),
+              //                           maxLines: 2,
+              //                           overflow: TextOverflow.ellipsis,
+              //                         ),
+              //                         Text(
+              //                           data['desc'],
+              //                           style: TextStyle(
+              //                             fontSize: 12,
+              //                             color: Colors.grey,
+              //                           ),
+              //                           maxLines: 3,
+              //                           overflow: TextOverflow.ellipsis,
+              //                         ),
+              //                         SizedBox(height: 8),
+              //                         Text(
+              //                           data['category'],
+              //                           style: const TextStyle(
+              //                             fontWeight: FontWeight.bold,
+              //                             fontSize: 16,
+              //                             color: Color.fromARGB(
+              //                               255,
+              //                               35,
+              //                               34,
+              //                               34,
+              //                             ),
+              //                           ),
+              //                         ),
+              //                         Text(
+              //                           '\$${(data["price"] as double).toStringAsFixed(2)}',
+              //                           style: const TextStyle(
+              //                             fontWeight: FontWeight.bold,
+              //                             fontSize: 16,
+              //                             color: Color.fromARGB(
+              //                               255,
+              //                               35,
+              //                               34,
+              //                               34,
+              //                             ),
+              //                           ),
+              //                         ),
+              //                       ],
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           );
+              //         },
+              //       );
+              //     }
+              //   },
+              // ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
     );
   }
 }

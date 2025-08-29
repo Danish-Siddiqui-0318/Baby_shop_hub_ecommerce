@@ -1,6 +1,7 @@
 import 'package:baby_shop_hub/widgets/CustomBottomNav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class DetailProduct extends StatefulWidget {
   final Map<String, dynamic> product; // 👈 product passed from ProductsUser
@@ -55,14 +56,16 @@ class _DetailProductState extends State<DetailProduct> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Product Image
-              Container(
-                height: 240.h,
-                margin: EdgeInsets.only(bottom: 12.h),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                  image: DecorationImage(
-                    image: NetworkImage(product['imageUrl']),
-                    fit: BoxFit.cover,
+              InteractiveViewer(
+                child: Container(
+                  height: 240.h,
+                  margin: EdgeInsets.only(bottom: 12.h),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    image: DecorationImage(
+                      image: NetworkImage(product['imageUrl']),
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ),
@@ -110,7 +113,9 @@ class _DetailProductState extends State<DetailProduct> {
                   Text(
                     "Quantity:",
                     style: TextStyle(
-                        fontSize: 15.sp, fontWeight: FontWeight.w600),
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   SizedBox(width: 12.w),
                   Container(
@@ -128,7 +133,9 @@ class _DetailProductState extends State<DetailProduct> {
                         Text(
                           '$_quantity',
                           style: TextStyle(
-                              fontSize: 16.sp, fontWeight: FontWeight.bold),
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         IconButton(
                           onPressed: _increaseQuantity,
@@ -179,11 +186,15 @@ class _DetailProductState extends State<DetailProduct> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () {},
-                      icon: Icon(Icons.shopping_cart_outlined,
-                          color: Colors.blue, size: 20.sp),
-                      label: Text('Go to cart',
-                          style: TextStyle(
-                              color: Colors.blue, fontSize: 14.sp)),
+                      icon: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.blue,
+                        size: 20.sp,
+                      ),
+                      label: Text(
+                        'Go to cart',
+                        style: TextStyle(color: Colors.blue, fontSize: 14.sp),
+                      ),
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         side: BorderSide(color: Colors.blue.shade100),
@@ -271,7 +282,6 @@ class _DetailProductState extends State<DetailProduct> {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
     );
   }
 }
